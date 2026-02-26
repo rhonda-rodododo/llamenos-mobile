@@ -28,6 +28,7 @@ import {
   setupNotificationTapHandler,
   handleInitialNotification,
 } from '@/lib/notification-handlers'
+import { initializeVoip, connectVoip, isVoipAvailable } from '@/lib/voip'
 import { OfflineBanner } from '@/components/OfflineBanner'
 import { ScreenErrorBoundary } from '@/components/ScreenErrorBoundary'
 import { colors, type ResolvedScheme, type ThemePref } from '@/lib/theme'
@@ -135,6 +136,14 @@ function PushNotificationSetup() {
     registerForPush().catch(() => {})
     setupNotificationCategories().catch(() => {})
     handleInitialNotification().catch(() => {})
+
+    // Initialize VoIP (Linphone SDK) if native module is available.
+    // This starts the SIP stack and registers for VoIP push.
+    if (isVoipAvailable) {
+      initializeVoip()
+        .then(() => connectVoip())
+        .catch((err) => console.warn('[VoIP] Setup error:', err))
+    }
 
     const tokenSub = setupTokenRefreshListener()
     const tapSub = setupNotificationTapHandler()

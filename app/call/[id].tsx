@@ -1,20 +1,21 @@
 /**
- * Active call screen — shows call status, timer, and note-taking.
+ * Active call screen — shows call status, timer, VoIP controls, and note-taking.
  *
- * On mobile, the actual voice connection is via the phone network
- * (Twilio parallel ringing calls the volunteer's phone number).
- * This screen handles coordination: call info, notes, and hangup.
+ * Supports two modes:
+ * - VoIP (native Linphone): full in-app audio with mute/speaker/hold controls
+ * - Phone network (Twilio parallel ring): coordination only (call info, notes, hangup)
  */
 
-import { useState, useCallback } from 'react'
+import { useState, useCallback, useMemo } from 'react'
 import { View, Text, TextInput, Pressable, Alert, ScrollView, KeyboardAvoidingView, Platform } from 'react-native'
 import { useLocalSearchParams, router, Stack } from 'expo-router'
 import { useTranslation } from 'react-i18next'
 import { useCallTimer } from '@/lib/hooks'
 import { useAuthStore } from '@/lib/store'
-import { encryptNoteV2 } from '@/lib/crypto'
+import { cryptoProvider } from '@/lib/crypto-provider'
 import * as keyManager from '@/lib/key-manager'
 import * as apiClient from '@/lib/api-client'
+import { useVoip, isVoipAvailable } from '@/lib/voip'
 
 export default function ActiveCallScreen() {
   const { id } = useLocalSearchParams<{ id: string }>()
@@ -27,6 +28,15 @@ export default function ActiveCallScreen() {
   const [saving, setSaving] = useState(false)
   const [hangingUp, setHangingUp] = useState(false)
 
+  // VoIP state — hooks are always called, but controls only shown when available
+  const voip = useVoip()
+
+  // Check if this call is a VoIP call (activeCall matches our call ID)
+  const isVoipCall = useMemo(
+    () => isVoipAvailable && voip.activeCall?.callId === id,
+    [voip.activeCall, id],
+  )
+
   const handleSaveNote = useCallback(async () => {
     if (!noteText.trim() || !publicKey || !id) return
     setSaving(true)
@@ -35,7 +45,7 @@ export default function ActiveCallScreen() {
       const pk = keyManager.getPublicKeyHex()
       if (!pk) throw new Error('No public key')
 
-      const encrypted = encryptNoteV2(
+      const encrypted = cryptoProvider.encryptNote(
         { text: noteText.trim() },
         pk,
         [],
@@ -66,7 +76,7 @@ export default function ActiveCallScreen() {
         try {
           const pk = keyManager.getPublicKeyHex()
           if (pk) {
-            const encrypted = encryptNoteV2(
+            const encrypted = cryptoProvider.encryptNote(
               { text: noteText.trim() },
               pk,
               [],
@@ -82,6 +92,10 @@ export default function ActiveCallScreen() {
         }
       }
 
+      // VoIP hangup (native SIP BYE) + server hangup
+      if (isVoipCall) {
+        await voip.hangup(id)
+      }
       await apiClient.hangupCall(id)
       router.back()
     } catch {
@@ -89,7 +103,7 @@ export default function ActiveCallScreen() {
     } finally {
       setHangingUp(false)
     }
-  }, [id, noteText, publicKey, t])
+  }, [id, noteText, publicKey, t, isVoipCall, voip])
 
   const handleSpam = useCallback(async () => {
     if (!id) return
@@ -103,6 +117,9 @@ export default function ActiveCallScreen() {
           style: 'destructive',
           onPress: async () => {
             try {
+              if (isVoipCall) {
+                await voip.hangup(id)
+              }
               await apiClient.reportCallSpam(id)
               router.back()
             } catch {
@@ -112,7 +129,19 @@ export default function ActiveCallScreen() {
         },
       ],
     )
-  }, [id, t])
+  }, [id, t, isVoipCall, voip])
+
+  const callInfo = voip.activeCall
+  const isMuted = callInfo?.isMuted ?? false
+  const isSpeaker = callInfo?.isSpeaker ?? false
+  const isPaused = callInfo?.state === 'paused'
+  const encryptionLabel = callInfo?.mediaEncryption === 'zrtp'
+    ? 'ZRTP'
+    : callInfo?.mediaEncryption === 'srtp'
+      ? 'SRTP'
+      : callInfo?.mediaEncryption === 'dtls-srtp'
+        ? 'DTLS'
+        : null
 
   return (
     <>
@@ -130,12 +159,69 @@ export default function ActiveCallScreen() {
           <View className="items-center rounded-xl border border-green-500/30 bg-green-500/5 p-6">
             <View className="mb-2 h-4 w-4 rounded-full bg-green-500" />
             <Text className="text-sm text-muted-foreground">
-              {t('calls.inProgress', 'In Progress')}
+              {isPaused
+                ? t('calls.onHold', 'On Hold')
+                : t('calls.inProgress', 'In Progress')}
             </Text>
             <Text className="font-mono text-3xl font-bold text-foreground">
               {formatted}
             </Text>
+            {/* Encryption badge */}
+            {isVoipCall && encryptionLabel && (
+              <View className="mt-2 rounded-full bg-green-500/20 px-3 py-1">
+                <Text className="text-xs font-medium text-green-700 dark:text-green-300">
+                  {encryptionLabel} {t('calls.encrypted', 'Encrypted')}
+                </Text>
+              </View>
+            )}
           </View>
+
+          {/* VoIP call controls — only shown for native VoIP calls */}
+          {isVoipCall && (
+            <View className="flex-row justify-center gap-4">
+              {/* Mute */}
+              <Pressable
+                className={`items-center rounded-full p-4 ${isMuted ? 'bg-destructive/20' : 'bg-muted'}`}
+                onPress={() => voip.toggleMute(id!)}
+                accessibilityLabel={isMuted ? t('calls.unmute', 'Unmute') : t('calls.mute', 'Mute')}
+              >
+                <Text className={`text-2xl ${isMuted ? 'text-destructive' : 'text-foreground'}`}>
+                  {isMuted ? '🔇' : '🎤'}
+                </Text>
+                <Text className="mt-1 text-xs text-muted-foreground">
+                  {isMuted ? t('calls.unmute', 'Unmute') : t('calls.mute', 'Mute')}
+                </Text>
+              </Pressable>
+
+              {/* Speaker */}
+              <Pressable
+                className={`items-center rounded-full p-4 ${isSpeaker ? 'bg-primary/20' : 'bg-muted'}`}
+                onPress={() => voip.toggleSpeaker()}
+                accessibilityLabel={isSpeaker ? t('calls.earpiece', 'Earpiece') : t('calls.speaker', 'Speaker')}
+              >
+                <Text className="text-2xl">
+                  {isSpeaker ? '🔊' : '🔈'}
+                </Text>
+                <Text className="mt-1 text-xs text-muted-foreground">
+                  {isSpeaker ? t('calls.earpiece', 'Earpiece') : t('calls.speaker', 'Speaker')}
+                </Text>
+              </Pressable>
+
+              {/* Hold */}
+              <Pressable
+                className={`items-center rounded-full p-4 ${isPaused ? 'bg-amber-500/20' : 'bg-muted'}`}
+                onPress={() => isPaused ? voip.resumeCall(id!) : voip.holdCall(id!)}
+                accessibilityLabel={isPaused ? t('calls.resume', 'Resume') : t('calls.hold', 'Hold')}
+              >
+                <Text className="text-2xl">
+                  {isPaused ? '▶️' : '⏸️'}
+                </Text>
+                <Text className="mt-1 text-xs text-muted-foreground">
+                  {isPaused ? t('calls.resume', 'Resume') : t('calls.hold', 'Hold')}
+                </Text>
+              </Pressable>
+            </View>
+          )}
 
           {/* Note editor */}
           <View className="gap-2">

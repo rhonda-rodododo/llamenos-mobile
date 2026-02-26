@@ -14,7 +14,11 @@
     },
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "net.riseup.llamenos"
+      "bundleIdentifier": "net.riseup.llamenos",
+      "infoPlist": {
+        "NSMicrophoneUsageDescription": "Llamenos needs microphone access to answer crisis calls via VoIP.",
+        "UIBackgroundModes": ["voip", "audio", "fetch", "remote-notification"]
+      }
     },
     "android": {
       "adaptiveIcon": {
@@ -24,7 +28,18 @@
         "monochromeImage": "./assets/android-icon-monochrome.png"
       },
       "package": "net.riseup.llamenos",
-      "predictiveBackGestureEnabled": false
+      "predictiveBackGestureEnabled": false,
+      "permissions": [
+        "RECORD_AUDIO",
+        "MODIFY_AUDIO_SETTINGS",
+        "BLUETOOTH",
+        "BLUETOOTH_CONNECT",
+        "FOREGROUND_SERVICE",
+        "FOREGROUND_SERVICE_PHONE_CALL",
+        "USE_FULL_SCREEN_INTENT",
+        "MANAGE_OWN_CALLS",
+        "VIBRATE"
+      ]
     },
     "web": {
       "favicon": "./assets/favicon.png",

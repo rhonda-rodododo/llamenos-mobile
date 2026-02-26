@@ -1,0 +1,50 @@
+apply plugin: 'com.android.library'
+apply plugin: 'kotlin-android'
+
+group = 'org.llamenos.sip'
+version = '0.1.0'
+
+android {
+  namespace "org.llamenos.sip"
+  compileSdkVersion safeExtGet("compileSdkVersion", 34)
+
+  defaultConfig {
+    minSdkVersion safeExtGet("minSdkVersion", 24)
+    targetSdkVersion safeExtGet("targetSdkVersion", 34)
+  }
+
+  compileOptions {
+    sourceCompatibility JavaVersion.VERSION_17
+    targetCompatibility JavaVersion.VERSION_17
+  }
+
+  kotlinOptions {
+    jvmTarget = "17"
+  }
+}
+
+repositories {
+  maven {
+    name = "linphone"
+    url = uri("https://download.linphone.org/maven_repository")
+    content {
+      includeGroup("org.linphone")
+      includeGroup("org.linphone.no-video")
+    }
+  }
+}
+
+dependencies {
+  implementation project(':expo-modules-core')
+  implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:${safeExtGet('kotlinVersion', '1.9.24')}"
+
+  // Linphone SDK (no-video flavor — audio-only VoIP, smaller binary)
+  implementation "org.linphone.no-video:linphone-sdk-android:5.4.+"
+
+  // Firebase Messaging for FCM VoIP push tokens
+  implementation "com.google.firebase:firebase-messaging:24.1.0"
+}
+
+def safeExtGet(prop, fallback) {
+  rootProject.ext.has(prop) ? rootProject.ext.get(prop) : fallback
+}
