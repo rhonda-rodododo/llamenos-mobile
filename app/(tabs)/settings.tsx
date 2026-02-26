@@ -8,13 +8,15 @@ import { router } from 'expo-router'
 import { useTranslation } from 'react-i18next'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { useAuthStore, useHubConfigStore } from '@/lib/store'
+import { useIsAdmin } from '@/hooks/usePermission'
 import * as keyManager from '@/lib/key-manager'
 import * as apiClient from '@/lib/api-client'
 
 export default function SettingsScreen() {
   const { t } = useTranslation()
   const publicKey = useAuthStore(s => s.publicKey)
-  const isAdmin = useAuthStore(s => s.isAdmin)
+  const isAdminStore = useAuthStore(s => s.isAdmin)
+  const isAdminPerm = useIsAdmin()
   const clearAuth = useAuthStore(s => s.clearAuth)
   const hubUrl = useHubConfigStore(s => s.hubUrl)
   const hubName = useHubConfigStore(s => s.hubName)
@@ -146,6 +148,29 @@ export default function SettingsScreen() {
           </Pressable>
         </View>
       </View>
+
+      {/* Admin section */}
+      {isAdminPerm && (
+        <View className="gap-2">
+          <Text className="text-sm font-medium text-muted-foreground">
+            {t('settings.admin', 'Administration')}
+          </Text>
+          {[
+            { route: '/admin/volunteers', label: t('admin.volunteers', 'Volunteers') },
+            { route: '/admin/bans', label: t('admin.bans', 'Ban List') },
+            { route: '/admin/audit', label: t('admin.audit', 'Audit Log') },
+            { route: '/admin/settings', label: t('admin.settings', 'Hub Settings') },
+          ].map(item => (
+            <Pressable
+              key={item.route}
+              className="rounded-xl border border-border bg-card p-4"
+              onPress={() => router.push(item.route as never)}
+            >
+              <Text className="text-base font-medium text-foreground">{item.label}</Text>
+            </Pressable>
+          ))}
+        </View>
+      )}
 
       {/* Actions */}
       <Pressable

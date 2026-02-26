@@ -59,6 +59,11 @@ export default function RootLayout() {
             name="call/[id]"
             options={{ headerShown: true, title: 'Call', gestureEnabled: false }}
           />
+          <Stack.Screen
+            name="conversation/[id]"
+            options={{ headerShown: true, title: 'Conversation' }}
+          />
+          <Stack.Screen name="admin" options={{ headerShown: false }} />
         </Stack>
       </AppProviders>
     </QueryClientProvider>
