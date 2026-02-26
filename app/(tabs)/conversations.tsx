@@ -1,17 +1,21 @@
 /**
- * Conversations tab — list of messaging conversations.
- * Grouped by status: waiting (yellow) and active (green).
+ * Conversations tab — list of messaging conversations (Epic 89 polish).
+ * Skeletons on initial load, a11y labels, theme-aware refresh.
  */
 
-import { useState, useCallback } from 'react'
-import { View, Text, FlatList, Pressable, RefreshControl, ActivityIndicator } from 'react-native'
+import { useCallback } from 'react'
+import { View, Text, FlatList, Pressable, RefreshControl } from 'react-native'
 import { router } from 'expo-router'
 import { useTranslation } from 'react-i18next'
+import { useColorScheme } from 'nativewind'
 import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { useNostrSubscription } from '@/lib/nostr/hooks'
 import { KIND_MESSAGE_NEW, KIND_CONVERSATION_ASSIGNED } from '@/lib/nostr/event-kinds'
 import { ChannelBadge } from '@/components/ChannelBadge'
+import { ListSkeleton, ConversationCardSkeleton } from '@/components/Skeleton'
 import { useAuthStore, useHubConfigStore } from '@/lib/store'
+import { colors } from '@/lib/theme'
+import { haptic } from '@/lib/haptics'
 import * as apiClient from '@/lib/api-client'
 import type { Conversation } from '@/lib/types'
 
@@ -27,11 +31,21 @@ function relativeTime(dateStr: string): string {
 }
 
 function ConversationRow({ item, onPress }: { item: Conversation; onPress: () => void }) {
+  const { t } = useTranslation()
   const isWaiting = item.status === 'waiting'
 
   return (
-    <Pressable className="flex-row items-center gap-3 rounded-xl border border-border bg-card p-4" onPress={onPress}>
-      <View className={`h-3 w-3 rounded-full ${isWaiting ? 'bg-yellow-500' : 'bg-green-500'}`} />
+    <Pressable
+      className="flex-row items-center gap-3 rounded-xl border border-border bg-card p-4"
+      onPress={() => { haptic.light(); onPress() }}
+      accessibilityLabel={`${isWaiting ? t('conversations.waiting', 'Waiting') : t('conversations.active', 'Active')} conversation, ${item.channelType}, last 4 digits ${item.contactIdentifier.slice(-4)}${item.lastMessageAt ? `, ${relativeTime(item.lastMessageAt)}` : ''}`}
+      accessibilityRole="button"
+      accessibilityHint={t('a11y.openConversation', 'Opens conversation')}
+    >
+      <View
+        className={`h-3 w-3 rounded-full ${isWaiting ? 'bg-yellow-500' : 'bg-green-500'}`}
+        accessibilityElementsHidden
+      />
       <View className="flex-1">
         <View className="flex-row items-center gap-2">
           <ChannelBadge channelType={item.channelType} />
@@ -41,7 +55,7 @@ function ConversationRow({ item, onPress }: { item: Conversation; onPress: () =>
         </View>
         <View className="mt-1 flex-row items-center gap-2">
           <Text className="text-xs text-muted-foreground">
-            {item.assignedTo ? `${item.assignedTo.slice(0, 8)}...` : 'Waiting'}
+            {item.assignedTo ? `${item.assignedTo.slice(0, 8)}...` : t('conversations.waiting', 'Waiting')}
           </Text>
           {item.lastMessageAt && (
             <Text className="text-xs text-muted-foreground">
@@ -56,9 +70,11 @@ function ConversationRow({ item, onPress }: { item: Conversation; onPress: () =>
 
 export default function ConversationsScreen() {
   const { t } = useTranslation()
+  const { colorScheme } = useColorScheme()
   const publicKey = useAuthStore(s => s.publicKey)
   const hubId = useHubConfigStore(s => s.hubUrl)
   const queryClient = useQueryClient()
+  const scheme = colorScheme === 'dark' ? 'dark' : 'light'
 
   const { data, isLoading, isFetching, refetch } = useQuery({
     queryKey: ['conversations'],
@@ -81,16 +97,11 @@ export default function ConversationsScreen() {
 
   if (isLoading) {
     return (
-      <View className="flex-1 items-center justify-center bg-background">
-        <ActivityIndicator size="large" />
+      <View className="flex-1 bg-background px-4 py-4">
+        <ListSkeleton count={4} Card={ConversationCardSkeleton} />
       </View>
     )
   }
-
-  const sections = [
-    ...(waiting.length > 0 ? [{ title: t('conversations.waiting', 'Waiting'), data: waiting }] : []),
-    ...(active.length > 0 ? [{ title: t('conversations.active', 'Active'), data: active }] : []),
-  ]
 
   return (
     <FlatList<Conversation>
@@ -121,15 +132,21 @@ export default function ConversationsScreen() {
           </View>
         )
       }}
+      accessibilityLabel={t('conversations.list', 'Conversations list')}
+      accessibilityRole="list"
       ListEmptyComponent={
-        <View className="items-center py-12">
+        <View className="items-center py-12" accessibilityRole="text">
           <Text className="text-base text-muted-foreground">
             {t('conversations.empty', 'No conversations')}
           </Text>
         </View>
       }
       refreshControl={
-        <RefreshControl refreshing={isFetching} onRefresh={() => refetch()} />
+        <RefreshControl
+          refreshing={isFetching}
+          onRefresh={() => { haptic.light(); refetch() }}
+          tintColor={colors[scheme].primary}
+        />
       }
     />
   )

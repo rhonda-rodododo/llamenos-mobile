@@ -1,24 +1,34 @@
 /**
- * Tab navigator layout for authenticated screens.
+ * Tab navigator layout for authenticated screens (Epic 89 polish).
+ *
  * Bottom tabs: Dashboard, Notes, Conversations, Shifts, Settings.
+ * Theme-aware tab bar colors.
  */
 
 import { Tabs } from 'expo-router'
+import { useColorScheme } from 'nativewind'
 import { useTranslation } from 'react-i18next'
 import { usePermission } from '@/hooks/usePermission'
+import { colors } from '@/lib/theme'
 
 export default function TabsLayout() {
   const { t } = useTranslation()
+  const { colorScheme } = useColorScheme()
   const canViewConversations = usePermission('conversations:read-assigned')
+  const scheme = colorScheme === 'dark' ? 'dark' : 'light'
+  const c = colors[scheme]
 
   return (
     <Tabs
       screenOptions={{
         headerShown: true,
-        tabBarActiveTintColor: '#2563eb',
-        tabBarInactiveTintColor: '#6b7280',
+        headerStyle: { backgroundColor: c.card },
+        headerTintColor: c.foreground,
+        tabBarActiveTintColor: c.primary,
+        tabBarInactiveTintColor: c.mutedForeground,
         tabBarStyle: {
-          borderTopColor: '#e5e7eb',
+          backgroundColor: c.card,
+          borderTopColor: c.border,
         },
       }}
     >
@@ -27,6 +37,7 @@ export default function TabsLayout() {
         options={{
           title: t('nav.dashboard', 'Dashboard'),
           tabBarLabel: t('nav.dashboard', 'Dashboard'),
+          tabBarAccessibilityLabel: t('nav.dashboard', 'Dashboard'),
         }}
       />
       <Tabs.Screen
@@ -34,6 +45,7 @@ export default function TabsLayout() {
         options={{
           title: t('nav.notes', 'Notes'),
           tabBarLabel: t('nav.notes', 'Notes'),
+          tabBarAccessibilityLabel: t('nav.notes', 'Notes'),
         }}
       />
       <Tabs.Screen
@@ -41,7 +53,8 @@ export default function TabsLayout() {
         options={{
           title: t('nav.conversations', 'Messages'),
           tabBarLabel: t('nav.messages', 'Messages'),
-          href: canViewConversations ? undefined : null, // Hide tab if no permission
+          tabBarAccessibilityLabel: t('nav.conversations', 'Messages'),
+          href: canViewConversations ? undefined : null,
         }}
       />
       <Tabs.Screen
@@ -49,6 +62,7 @@ export default function TabsLayout() {
         options={{
           title: t('nav.shifts', 'Shifts'),
           tabBarLabel: t('nav.shifts', 'Shifts'),
+          tabBarAccessibilityLabel: t('nav.shifts', 'Shifts'),
         }}
       />
       <Tabs.Screen
@@ -56,6 +70,7 @@ export default function TabsLayout() {
         options={{
           title: t('nav.settings', 'Settings'),
           tabBarLabel: t('nav.settings', 'Settings'),
+          tabBarAccessibilityLabel: t('nav.settings', 'Settings'),
         }}
       />
     </Tabs>

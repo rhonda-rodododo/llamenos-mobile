@@ -1,22 +1,28 @@
 /**
- * Notes screen — paginated list of E2EE encrypted notes.
- * Decryption happens client-side using the user's secret key.
+ * Notes screen — paginated list of E2EE encrypted notes (Epic 89 polish).
+ * Skeletons on initial load, pull-to-refresh, a11y labels.
  */
 
 import { useState, useCallback } from 'react'
-import { View, Text, FlatList, ActivityIndicator, RefreshControl } from 'react-native'
+import { View, Text, FlatList, RefreshControl } from 'react-native'
 import { useTranslation } from 'react-i18next'
+import { useColorScheme } from 'nativewind'
 import { useQuery } from '@tanstack/react-query'
 import { NoteCard } from '@/components/NoteCard'
+import { ListSkeleton, NoteCardSkeleton } from '@/components/Skeleton'
 import { useAuthStore } from '@/lib/store'
+import { colors } from '@/lib/theme'
+import { haptic } from '@/lib/haptics'
 import * as apiClient from '@/lib/api-client'
 
 const PAGE_SIZE = 20
 
 export default function NotesScreen() {
   const { t } = useTranslation()
+  const { colorScheme } = useColorScheme()
   const publicKey = useAuthStore(s => s.publicKey)
   const [page, setPage] = useState(1)
+  const scheme = colorScheme === 'dark' ? 'dark' : 'light'
 
   const { data, isLoading, isFetching, refetch } = useQuery({
     queryKey: ['notes', page],
@@ -35,14 +41,18 @@ export default function NotesScreen() {
   }, [hasMore, isFetching])
 
   const onRefresh = useCallback(async () => {
+    haptic.light()
     setPage(1)
     await refetch()
   }, [refetch])
 
   if (isLoading) {
     return (
-      <View className="flex-1 items-center justify-center bg-background">
-        <ActivityIndicator size="large" />
+      <View className="flex-1 bg-background px-4 py-4">
+        <Text className="mb-4 text-lg font-semibold text-foreground">
+          {t('notes.title', 'Call Notes')}
+        </Text>
+        <ListSkeleton count={5} Card={NoteCardSkeleton} />
       </View>
     )
   }
@@ -58,8 +68,10 @@ export default function NotesScreen() {
           <NoteCard note={item} myPubkey={publicKey} />
         </View>
       )}
+      accessibilityLabel={t('notes.notesList', 'Notes list')}
+      accessibilityRole="list"
       ListEmptyComponent={
-        <View className="items-center py-12">
+        <View className="items-center py-12" accessibilityRole="text">
           <Text className="text-base text-muted-foreground">
             {t('notes.empty', 'No notes yet')}
           </Text>
@@ -76,14 +88,18 @@ export default function NotesScreen() {
         </Text>
       }
       refreshControl={
-        <RefreshControl refreshing={isFetching && page === 1} onRefresh={onRefresh} />
+        <RefreshControl
+          refreshing={isFetching && page === 1}
+          onRefresh={onRefresh}
+          tintColor={colors[scheme].primary}
+        />
       }
       onEndReached={loadMore}
       onEndReachedThreshold={0.5}
       ListFooterComponent={
         isFetching && page > 1 ? (
           <View className="items-center py-4">
-            <ActivityIndicator size="small" />
+            <ListSkeleton count={2} Card={NoteCardSkeleton} />
           </View>
         ) : null
       }

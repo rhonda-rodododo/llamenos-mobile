@@ -6,6 +6,7 @@ import { create } from 'zustand'
 import { persist, createJSONStorage } from 'zustand/middleware'
 import { createMMKV } from 'react-native-mmkv'
 import type { UserRole } from './types'
+import type { ThemePref } from './theme'
 
 const storage = createMMKV({ id: 'app-storage' })
 
@@ -102,6 +103,34 @@ export const useHubConfigStore = create<HubConfigState>()(
     }),
     {
       name: 'hub-config-storage',
+      storage: createJSONStorage(() => mmkvStorage),
+    },
+  ),
+)
+
+// --- Settings Store (persisted) ---
+
+interface SettingsState {
+  themePref: ThemePref
+  language: string | null
+  reduceMotion: boolean
+  setThemePref: (pref: ThemePref) => void
+  setLanguage: (lang: string) => void
+  setReduceMotion: (enabled: boolean) => void
+}
+
+export const useSettingsStore = create<SettingsState>()(
+  persist(
+    (set) => ({
+      themePref: 'system',
+      language: null,
+      reduceMotion: false,
+      setThemePref: (pref) => set({ themePref: pref }),
+      setLanguage: (lang) => set({ language: lang }),
+      setReduceMotion: (enabled) => set({ reduceMotion: enabled }),
+    }),
+    {
+      name: 'settings-storage',
       storage: createJSONStorage(() => mmkvStorage),
     },
   ),

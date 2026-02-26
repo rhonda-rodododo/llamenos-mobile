@@ -2,28 +2,46 @@
 module.exports = {
   content: ['./app/**/*.{js,jsx,ts,tsx}', './src/**/*.{js,jsx,ts,tsx}'],
   presets: [require('nativewind/preset')],
+  darkMode: 'class',
   theme: {
     extend: {
       colors: {
-        primary: {
-          DEFAULT: 'hsl(221.2, 83.2%, 53.3%)',
-          foreground: 'hsl(210, 40%, 98%)',
+        background: 'var(--background)',
+        foreground: 'var(--foreground)',
+        card: {
+          DEFAULT: 'var(--card)',
+          foreground: 'var(--card-foreground)',
         },
-        destructive: {
-          DEFAULT: 'hsl(0, 84.2%, 60.2%)',
-          foreground: 'hsl(210, 40%, 98%)',
+        primary: {
+          DEFAULT: 'var(--primary)',
+          foreground: 'var(--primary-foreground)',
+        },
+        secondary: {
+          DEFAULT: 'var(--secondary)',
+          foreground: 'var(--secondary-foreground)',
         },
         muted: {
-          DEFAULT: 'hsl(210, 40%, 96.1%)',
-          foreground: 'hsl(215.4, 16.3%, 46.9%)',
+          DEFAULT: 'var(--muted)',
+          foreground: 'var(--muted-foreground)',
         },
-        card: {
-          DEFAULT: 'hsl(0, 0%, 100%)',
-          foreground: 'hsl(222.2, 84%, 4.9%)',
+        accent: {
+          DEFAULT: 'var(--accent)',
+          foreground: 'var(--accent-foreground)',
         },
-        border: 'hsl(214.3, 31.8%, 91.4%)',
-        background: 'hsl(0, 0%, 100%)',
-        foreground: 'hsl(222.2, 84%, 4.9%)',
+        destructive: {
+          DEFAULT: 'var(--destructive)',
+          foreground: 'var(--destructive-foreground)',
+        },
+        border: 'var(--border)',
+        input: 'var(--input)',
+        ring: 'var(--ring)',
+      },
+      borderRadius: {
+        lg: '0.625rem',
+        md: 'calc(0.625rem - 2px)',
+        sm: 'calc(0.625rem - 4px)',
+        xl: 'calc(0.625rem + 4px)',
+        '2xl': 'calc(0.625rem + 8px)',
       },
     },
   },

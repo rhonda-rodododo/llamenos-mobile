@@ -1,5 +1,6 @@
 /**
- * React Query client setup for React Native.
+ * React Query client setup for React Native (Epic 89 polish).
+ * Includes mutation retry for offline resilience.
  */
 
 import { QueryClient, focusManager, onlineManager } from '@tanstack/react-query'
@@ -29,8 +30,13 @@ export const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
       staleTime: 30_000,
+      gcTime: 5 * 60_000, // 5 minutes — cached data visible when offline
       retry: 2,
-      refetchOnWindowFocus: false, // Not meaningful in RN; use focusManager above
+      refetchOnWindowFocus: false,
+    },
+    mutations: {
+      retry: 2,
+      retryDelay: (attempt) => Math.min(1000 * 2 ** attempt, 10_000),
     },
   },
 })

@@ -1,10 +1,11 @@
 /**
- * Call status card — shows ringing or active call info.
+ * Call status card — shows ringing or active call info (Epic 89 a11y).
  */
 
 import { View, Text, Pressable } from 'react-native'
 import { useTranslation } from 'react-i18next'
 import { useCallTimer } from '@/lib/hooks'
+import { haptic } from '@/lib/haptics'
 import type { ActiveCall } from '@/lib/types'
 
 interface CallCardProps {
@@ -22,6 +23,9 @@ export function CallCard({ call, onAnswer, onHangup, onSpam, isCurrent }: CallCa
   )
 
   const isRinging = call.status === 'ringing'
+  const statusLabel = isRinging
+    ? t('calls.ringing', 'Incoming Call')
+    : t('calls.inProgress', 'In Progress')
 
   return (
     <View
@@ -32,6 +36,8 @@ export function CallCard({ call, onAnswer, onHangup, onSpam, isCurrent }: CallCa
             ? 'border-green-500 bg-green-500/5'
             : 'border-border bg-card'
       }`}
+      accessibilityLabel={`${statusLabel}${call.callerLast4 ? `, caller ending ${call.callerLast4}` : ''}${call.status === 'in-progress' ? `, ${formatted}` : ''}`}
+      accessibilityRole="summary"
     >
       <View className="mb-2 flex-row items-center justify-between">
         <View className="flex-row items-center gap-2">
@@ -39,15 +45,16 @@ export function CallCard({ call, onAnswer, onHangup, onSpam, isCurrent }: CallCa
             className={`h-3 w-3 rounded-full ${
               isRinging ? 'bg-primary' : 'bg-green-500'
             }`}
+            accessibilityElementsHidden
           />
           <Text className="text-sm font-semibold text-foreground">
-            {isRinging
-              ? t('calls.ringing', 'Incoming Call')
-              : t('calls.inProgress', 'In Progress')}
+            {statusLabel}
           </Text>
         </View>
         {call.status === 'in-progress' && (
-          <Text className="font-mono text-sm text-muted-foreground">{formatted}</Text>
+          <Text className="font-mono text-sm text-muted-foreground" accessibilityLabel={`Duration ${formatted}`}>
+            {formatted}
+          </Text>
         )}
       </View>
 
@@ -61,7 +68,10 @@ export function CallCard({ call, onAnswer, onHangup, onSpam, isCurrent }: CallCa
         {isRinging && onAnswer && (
           <Pressable
             className="flex-1 rounded-lg bg-green-600 px-3 py-2"
-            onPress={onAnswer}
+            onPress={() => { haptic.medium(); onAnswer() }}
+            accessibilityLabel={t('calls.answer', 'Answer')}
+            accessibilityRole="button"
+            hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
           >
             <Text className="text-center text-sm font-semibold text-white">
               {t('calls.answer', 'Answer')}
@@ -71,7 +81,10 @@ export function CallCard({ call, onAnswer, onHangup, onSpam, isCurrent }: CallCa
         {isCurrent && onHangup && (
           <Pressable
             className="flex-1 rounded-lg bg-destructive px-3 py-2"
-            onPress={onHangup}
+            onPress={() => { haptic.warning(); onHangup() }}
+            accessibilityLabel={t('calls.hangup', 'Hang Up')}
+            accessibilityRole="button"
+            hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
           >
             <Text className="text-center text-sm font-semibold text-white">
               {t('calls.hangup', 'Hang Up')}
@@ -81,7 +94,10 @@ export function CallCard({ call, onAnswer, onHangup, onSpam, isCurrent }: CallCa
         {isRinging && onSpam && (
           <Pressable
             className="rounded-lg border border-destructive/30 px-3 py-2"
-            onPress={onSpam}
+            onPress={() => { haptic.warning(); onSpam() }}
+            accessibilityLabel={t('calls.spam', 'Report as Spam')}
+            accessibilityRole="button"
+            hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
           >
             <Text className="text-center text-sm text-destructive">
               {t('calls.spam', 'Spam')}

@@ -15,6 +15,8 @@
         "expo-clipboard": "^55.0.8",
         "expo-constants": "~18.0.4",
         "expo-crypto": "~55.0.8",
+        "expo-font": "~55.0.4",
+        "expo-haptics": "~55.0.8",
         "expo-linking": "~7.1.4",
         "expo-localization": "~55.0.8",
         "expo-network": "~55.0.8",
@@ -27,6 +29,7 @@
         "nativewind": "^4.2.2",
         "nostr-tools": "^2.23.1",
         "react": "19.2.0",
+        "react-error-boundary": "^6.1.1",
         "react-i18next": "^16.5.4",
         "react-native": "0.83.2",
         "react-native-mmkv": "^4.1.2",
@@ -34,6 +37,7 @@
         "react-native-reanimated": "4.2.1",
         "react-native-safe-area-context": "~5.4.0",
         "react-native-screens": "~4.11.1",
+        "react-native-toast-message": "^2.3.3",
         "zustand": "^5.0.11",
       },
       "devDependencies": {
@@ -648,6 +652,8 @@
 
     "expo-font": ["expo-font@55.0.4", "", { "dependencies": { "fontfaceobserver": "^2.1.0" }, "peerDependencies": { "expo": "*", "react": "*", "react-native": "*" } }, "sha512-ZKeGTFffPygvY5dM/9ATM2p7QDkhsaHopH7wFAWgP2lKzqUMS9B/RxCvw5CaObr9Ro7x9YptyeRKX2HmgmMfrg=="],
 
+    "expo-haptics": ["expo-haptics@55.0.8", "", { "peerDependencies": { "expo": "*" } }, "sha512-yVR6EsQwl1WuhFITc0PpfI/7dsBdjK/F2YA8xB80UUW9iTa+Tqz21FpH4n/vtbargpzFxkhl5WNYMa419+QWFQ=="],
+
     "expo-keep-awake": ["expo-keep-awake@55.0.4", "", { "peerDependencies": { "expo": "*", "react": "*" } }, "sha512-vwfdMtMS5Fxaon8gC0AiE70SpxTsHJ+rjeoVJl8kdfdbxczF7OIaVmfjFJ5Gfigd/WZiLqxhfZk34VAkXF4PNg=="],
 
     "expo-linking": ["expo-linking@7.1.7", "", { "dependencies": { "expo-constants": "~17.1.7", "invariant": "^2.2.4" }, "peerDependencies": { "react": "*", "react-native": "*" } }, "sha512-ZJaH1RIch2G/M3hx2QJdlrKbYFUTOjVVW4g39hfxrE5bPX9xhZUYXqxqQtzMNl1ylAevw9JkgEfWbBWddbZ3UA=="],
@@ -1038,6 +1044,8 @@
 
     "react-devtools-core": ["react-devtools-core@6.1.5", "", { "dependencies": { "shell-quote": "^1.6.1", "ws": "^7" } }, "sha512-ePrwPfxAnB+7hgnEr8vpKxL9cmnp7F322t8oqcPshbIQQhDKgFDW4tjhF2wjVbdXF9O/nyuy3sQWd9JGpiLPvA=="],
 
+    "react-error-boundary": ["react-error-boundary@6.1.1", "", { "peerDependencies": { "react": "^18.0.0 || ^19.0.0" } }, "sha512-BrYwPOdXi5mqkk5lw+Uvt0ThHx32rCt3BkukS4X23A2AIWDPSGX6iaWTc0y9TU/mHDA/6qOSGel+B2ERkOvD1w=="],
+
     "react-fast-compare": ["react-fast-compare@3.2.2", "", {}, "sha512-nsO+KSNgo1SbJqJEYRE9ERzo7YtYbou/OqjSQKxV7jcKox7+usiUVZOAC+XnDOABXggQTno0Y1CpVnuWEc1boQ=="],
 
     "react-freeze": ["react-freeze@1.0.4", "", { "peerDependencies": { "react": ">=17.0.0" } }, "sha512-r4F0Sec0BLxWicc7HEyo2x3/2icUTrRmDjaaRyzzn+7aDyFZliszMDOgLVwSnQnYENOlL1o569Ze2HZefk8clA=="],
@@ -1061,6 +1069,8 @@
     "react-native-safe-area-context": ["react-native-safe-area-context@5.4.1", "", { "peerDependencies": { "react": "*", "react-native": "*" } }, "sha512-x+g3NblZ9jof8y+XkVvaGlpMrSlixhrJJ33BRzhTAKUKctQVecO1heSXmzxc5UdjvGYBKS6kPZVUw2b8NxHcPg=="],
 
     "react-native-screens": ["react-native-screens@4.11.1", "", { "dependencies": { "react-freeze": "^1.0.0", "react-native-is-edge-to-edge": "^1.1.7", "warn-once": "^0.1.0" }, "peerDependencies": { "react": "*", "react-native": "*" } }, "sha512-F0zOzRVa3ptZfLpD0J8ROdo+y1fEPw+VBFq1MTY/iyDu08al7qFUO5hLMd+EYMda5VXGaTFCa8q7bOppUszhJw=="],
+
+    "react-native-toast-message": ["react-native-toast-message@2.3.3", "", { "peerDependencies": { "react": "*", "react-native": "*" } }, "sha512-4IIUHwUPvKHu4gjD0Vj2aGQzqPATiblL1ey8tOqsxOWRPGGu52iIbL8M/mCz4uyqecvPdIcMY38AfwRuUADfQQ=="],
 
     "react-native-worklets": ["react-native-worklets@0.7.4", "", { "dependencies": { "@babel/plugin-transform-arrow-functions": "7.27.1", "@babel/plugin-transform-class-properties": "7.27.1", "@babel/plugin-transform-classes": "7.28.4", "@babel/plugin-transform-nullish-coalescing-operator": "7.27.1", "@babel/plugin-transform-optional-chaining": "7.27.1", "@babel/plugin-transform-shorthand-properties": "7.27.1", "@babel/plugin-transform-template-literals": "7.27.1", "@babel/plugin-transform-unicode-regex": "7.27.1", "@babel/preset-typescript": "7.27.1", "convert-source-map": "2.0.0", "semver": "7.7.3" }, "peerDependencies": { "@babel/core": "*", "react": "*", "react-native": "*" } }, "sha512-NYOdM1MwBb3n+AtMqy1tFy3Mn8DliQtd8sbzAVRf9Gc+uvQ0zRfxN7dS8ZzoyX7t6cyQL5THuGhlnX+iFlQTag=="],
 

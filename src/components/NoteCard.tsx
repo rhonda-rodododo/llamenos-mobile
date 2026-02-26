@@ -1,10 +1,11 @@
 /**
- * Note preview card — shows encrypted note with decrypted preview.
+ * Note preview card — shows encrypted note with decrypted preview (Epic 89 a11y).
  */
 
 import { useCallback } from 'react'
 import { View, Text, Pressable } from 'react-native'
 import { router } from 'expo-router'
+import { useTranslation } from 'react-i18next'
 import { EncryptedContent } from './EncryptedContent'
 import { decryptNoteV2, decryptNote } from '@/lib/crypto'
 import * as keyManager from '@/lib/key-manager'
@@ -16,6 +17,7 @@ interface NoteCardProps {
 }
 
 export function NoteCard({ note, myPubkey }: NoteCardProps) {
+  const { t } = useTranslation()
   const dateStr = new Date(note.createdAt).toLocaleDateString(undefined, {
     month: 'short',
     day: 'numeric',
@@ -58,6 +60,9 @@ export function NoteCard({ note, myPubkey }: NoteCardProps) {
     <Pressable
       className="rounded-xl border border-border bg-card p-4"
       onPress={() => router.push(`/note/${note.id}`)}
+      accessibilityLabel={t('notes.noteFrom', 'Note from {{date}}', { date: dateStr })}
+      accessibilityRole="button"
+      accessibilityHint={t('a11y.openNote', 'Opens note details')}
     >
       <View className="mb-2 flex-row items-center justify-between">
         <Text className="text-xs text-muted-foreground">

@@ -1,9 +1,10 @@
 /**
- * Shift card — shows shift details with signup/drop action.
+ * Shift card — shows shift details with signup/drop action (Epic 89 a11y + haptics).
  */
 
 import { View, Text, Pressable } from 'react-native'
 import { useTranslation } from 'react-i18next'
+import { haptic } from '@/lib/haptics'
 import type { Shift } from '@/lib/types'
 
 const DAY_LABELS = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'] as const
@@ -18,11 +19,16 @@ interface ShiftCardProps {
 
 export function ShiftCard({ shift, isSignedUp, onSignUp, onDrop, loading }: ShiftCardProps) {
   const { t } = useTranslation()
+  const activeDays = shift.days.map(d => DAY_LABELS[d]).join(', ')
 
   return (
-    <View className="rounded-xl border border-border bg-card p-4">
+    <View
+      className="rounded-xl border border-border bg-card p-4"
+      accessibilityLabel={`${shift.name}, ${shift.startTime} to ${shift.endTime}, ${activeDays}`}
+      accessibilityRole="summary"
+    >
       <View className="mb-2 flex-row items-center justify-between">
-        <Text className="text-base font-semibold text-foreground">
+        <Text className="text-base font-semibold text-foreground" numberOfLines={1}>
           {shift.name}
         </Text>
         <Text className="text-sm text-muted-foreground">
@@ -31,7 +37,7 @@ export function ShiftCard({ shift, isSignedUp, onSignUp, onDrop, loading }: Shif
       </View>
 
       {/* Day badges */}
-      <View className="mb-3 flex-row gap-1">
+      <View className="mb-3 flex-row gap-1" accessibilityElementsHidden>
         {DAY_LABELS.map((label, i) => (
           <View
             key={label}
@@ -63,8 +69,20 @@ export function ShiftCard({ shift, isSignedUp, onSignUp, onDrop, loading }: Shif
           className={`rounded-lg px-4 py-2 ${
             isSignedUp ? 'border border-destructive/30 bg-destructive/5' : 'bg-primary'
           }`}
-          onPress={isSignedUp ? onDrop : onSignUp}
+          onPress={() => {
+            if (isSignedUp) {
+              haptic.warning()
+              onDrop()
+            } else {
+              haptic.medium()
+              onSignUp()
+            }
+          }}
           disabled={loading}
+          accessibilityLabel={isSignedUp ? t('shifts.drop', 'Drop') : t('shifts.signUp', 'Sign Up')}
+          accessibilityRole="button"
+          accessibilityState={{ disabled: !!loading }}
+          hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
         >
           <Text
             className={`text-sm font-medium ${

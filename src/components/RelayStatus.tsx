@@ -1,5 +1,5 @@
 /**
- * Small indicator showing Nostr relay connection state.
+ * Small indicator showing Nostr relay connection state (Epic 89 a11y).
  */
 
 import { View, Text } from 'react-native'
@@ -12,7 +12,7 @@ export function RelayStatus() {
 
   if (state === 'connected') return null
 
-  const colors = {
+  const dotColors = {
     connecting: 'bg-yellow-500',
     disconnected: 'bg-red-500',
     authenticating: 'bg-yellow-500',
@@ -25,8 +25,13 @@ export function RelayStatus() {
   } as const
 
   return (
-    <View className="flex-row items-center gap-2 rounded-lg bg-card px-3 py-1.5">
-      <View className={`h-2 w-2 rounded-full ${colors[state]}`} />
+    <View
+      className="flex-row items-center gap-2 rounded-lg bg-card px-3 py-1.5"
+      accessibilityLabel={`${t('relay.status', 'Relay')}: ${labels[state]}`}
+      accessibilityRole="text"
+      accessibilityLiveRegion="polite"
+    >
+      <View className={`h-2 w-2 rounded-full ${dotColors[state]}`} accessibilityElementsHidden />
       <Text className="text-xs text-muted-foreground">{labels[state]}</Text>
     </View>
   )

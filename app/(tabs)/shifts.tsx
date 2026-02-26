@@ -1,21 +1,28 @@
 /**
- * Shifts screen — view and manage shift schedule.
- * Shows all shifts with signup/drop functionality.
+ * Shifts screen — view and manage shift schedule (Epic 89 polish).
+ * Skeletons on initial load, haptic feedback, a11y labels.
  */
 
 import { useState, useCallback } from 'react'
-import { View, Text, FlatList, RefreshControl, Alert, ActivityIndicator } from 'react-native'
+import { View, Text, FlatList, RefreshControl, Alert } from 'react-native'
 import { useTranslation } from 'react-i18next'
+import { useColorScheme } from 'nativewind'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { ShiftCard } from '@/components/ShiftCard'
+import { ListSkeleton, ShiftCardSkeleton } from '@/components/Skeleton'
 import { useAuthStore } from '@/lib/store'
+import { colors } from '@/lib/theme'
+import { haptic } from '@/lib/haptics'
+import { toast } from '@/lib/toast'
 import * as apiClient from '@/lib/api-client'
 
 export default function ShiftsScreen() {
   const { t } = useTranslation()
+  const { colorScheme } = useColorScheme()
   const publicKey = useAuthStore(s => s.publicKey)
   const queryClient = useQueryClient()
   const [actioningShiftId, setActioningShiftId] = useState<string | null>(null)
+  const scheme = colorScheme === 'dark' ? 'dark' : 'light'
 
   const { data, isLoading, isFetching, refetch } = useQuery({
     queryKey: ['shifts'],
@@ -27,15 +34,28 @@ export default function ShiftsScreen() {
 
   const signUpMutation = useMutation({
     mutationFn: (shiftId: string) => apiClient.signUpForShift(shiftId),
-    onSuccess: () => queryClient.invalidateQueries({ queryKey: ['shifts'] }),
-    onError: () => Alert.alert(t('shifts.error', 'Error'), t('shifts.signUpError', 'Failed to sign up for shift')),
+    onSuccess: () => {
+      haptic.success()
+      toast.success(t('shifts.signedUp', 'Signed up for shift'))
+      queryClient.invalidateQueries({ queryKey: ['shifts'] })
+    },
+    onError: () => {
+      haptic.error()
+      Alert.alert(t('shifts.error', 'Error'), t('shifts.signUpError', 'Failed to sign up for shift'))
+    },
     onSettled: () => setActioningShiftId(null),
   })
 
   const dropMutation = useMutation({
     mutationFn: (shiftId: string) => apiClient.dropShift(shiftId),
-    onSuccess: () => queryClient.invalidateQueries({ queryKey: ['shifts'] }),
-    onError: () => Alert.alert(t('shifts.error', 'Error'), t('shifts.dropError', 'Failed to drop shift')),
+    onSuccess: () => {
+      toast.info(t('shifts.dropped', 'Shift dropped'))
+      queryClient.invalidateQueries({ queryKey: ['shifts'] })
+    },
+    onError: () => {
+      haptic.error()
+      Alert.alert(t('shifts.error', 'Error'), t('shifts.dropError', 'Failed to drop shift'))
+    },
     onSettled: () => setActioningShiftId(null),
   })
 
@@ -64,8 +84,11 @@ export default function ShiftsScreen() {
 
   if (isLoading) {
     return (
-      <View className="flex-1 items-center justify-center bg-background">
-        <ActivityIndicator size="large" />
+      <View className="flex-1 bg-background px-4 py-4">
+        <Text className="mb-4 text-lg font-semibold text-foreground">
+          {t('shifts.title', 'Shift Schedule')}
+        </Text>
+        <ListSkeleton count={4} Card={ShiftCardSkeleton} />
       </View>
     )
   }
@@ -87,8 +110,10 @@ export default function ShiftsScreen() {
           />
         </View>
       )}
+      accessibilityLabel={t('shifts.shiftList', 'Shift schedule list')}
+      accessibilityRole="list"
       ListEmptyComponent={
-        <View className="items-center py-12">
+        <View className="items-center py-12" accessibilityRole="text">
           <Text className="text-base text-muted-foreground">
             {t('shifts.empty', 'No shifts scheduled')}
           </Text>
@@ -103,7 +128,11 @@ export default function ShiftsScreen() {
         </Text>
       }
       refreshControl={
-        <RefreshControl refreshing={isFetching} onRefresh={() => refetch()} />
+        <RefreshControl
+          refreshing={isFetching}
+          onRefresh={() => { haptic.light(); refetch() }}
+          tintColor={colors[scheme].primary}
+        />
       }
     />
   )
