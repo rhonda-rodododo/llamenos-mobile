@@ -1,0 +1,9 @@
+{
+  "platforms": ["ios", "android"],
+  "ios": {
+    "modules": ["LlamenosCoreModule"]
+  },
+  "android": {
+    "modules": ["org.llamenos.core.LlamenosCoreModule"]
+  }
+}
