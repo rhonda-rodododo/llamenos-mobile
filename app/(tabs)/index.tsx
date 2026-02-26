@@ -69,6 +69,7 @@ export default function DashboardScreen() {
     <ScrollView
       className="flex-1 bg-background"
       contentContainerClassName="px-4 py-4 gap-4"
+      testID="dashboard-screen"
       refreshControl={
         <RefreshControl
           refreshing={refreshing}
@@ -97,6 +98,7 @@ export default function DashboardScreen() {
             : t('dashboard.offShift', 'Off Shift')
         }`}
         accessibilityRole="summary"
+        testID="dashboard-shift-status"
       >
         <View className="flex-row items-center justify-between">
           <View>
@@ -146,6 +148,7 @@ export default function DashboardScreen() {
           className="flex-1 rounded-xl border border-border bg-card p-4"
           accessibilityLabel={`${t('dashboard.callsToday', 'Calls Today')}: ${todayCount}`}
           accessibilityRole="text"
+          testID="dashboard-calls-today"
         >
           <Text className="text-sm text-muted-foreground">
             {t('dashboard.callsToday', 'Calls Today')}
@@ -203,7 +206,7 @@ export default function DashboardScreen() {
 
       {/* Empty state */}
       {!currentCall && ringingCalls.length === 0 && !shiftLoading && (
-        <View className="items-center py-8" accessibilityRole="text">
+        <View className="items-center py-8" accessibilityRole="text" testID="dashboard-empty-state">
           <Text className="text-base text-muted-foreground">
             {onShift
               ? t('dashboard.waiting', 'Waiting for calls...')

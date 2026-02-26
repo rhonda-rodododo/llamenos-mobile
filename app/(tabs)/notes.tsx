@@ -61,6 +61,7 @@ export default function NotesScreen() {
     <FlatList
       className="flex-1 bg-background"
       contentContainerClassName="px-4 py-4"
+      testID="notes-screen"
       data={notes}
       keyExtractor={item => item.id}
       renderItem={({ item }) => (
@@ -71,7 +72,7 @@ export default function NotesScreen() {
       accessibilityLabel={t('notes.notesList', 'Notes list')}
       accessibilityRole="list"
       ListEmptyComponent={
-        <View className="items-center py-12" accessibilityRole="text">
+        <View className="items-center py-12" accessibilityRole="text" testID="notes-empty-state">
           <Text className="text-base text-muted-foreground">
             {t('notes.empty', 'No notes yet')}
           </Text>

@@ -107,6 +107,7 @@ export default function ConversationsScreen() {
     <FlatList<Conversation>
       className="flex-1 bg-background"
       contentContainerClassName="px-4 py-4"
+      testID="conversations-screen"
       data={[...waiting, ...active]}
       keyExtractor={item => item.id}
       renderItem={({ item, index }) => {
@@ -135,7 +136,7 @@ export default function ConversationsScreen() {
       accessibilityLabel={t('conversations.list', 'Conversations list')}
       accessibilityRole="list"
       ListEmptyComponent={
-        <View className="items-center py-12" accessibilityRole="text">
+        <View className="items-center py-12" accessibilityRole="text" testID="conversations-empty-state">
           <Text className="text-base text-muted-foreground">
             {t('conversations.empty', 'No conversations')}
           </Text>

@@ -63,6 +63,7 @@ export function NoteCard({ note, myPubkey }: NoteCardProps) {
       accessibilityLabel={t('notes.noteFrom', 'Note from {{date}}', { date: dateStr })}
       accessibilityRole="button"
       accessibilityHint={t('a11y.openNote', 'Opens note details')}
+      testID="note-card"
     >
       <View className="mb-2 flex-row items-center justify-between">
         <Text className="text-xs text-muted-foreground">

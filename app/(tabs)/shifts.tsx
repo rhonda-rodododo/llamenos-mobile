@@ -97,6 +97,7 @@ export default function ShiftsScreen() {
     <FlatList
       className="flex-1 bg-background"
       contentContainerClassName="px-4 py-4"
+      testID="shifts-screen"
       data={shifts}
       keyExtractor={item => item.id}
       renderItem={({ item }) => (
@@ -113,7 +114,7 @@ export default function ShiftsScreen() {
       accessibilityLabel={t('shifts.shiftList', 'Shift schedule list')}
       accessibilityRole="list"
       ListEmptyComponent={
-        <View className="items-center py-12" accessibilityRole="text">
+        <View className="items-center py-12" accessibilityRole="text" testID="shifts-empty-state">
           <Text className="text-base text-muted-foreground">
             {t('shifts.empty', 'No shifts scheduled')}
           </Text>

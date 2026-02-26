@@ -62,7 +62,7 @@ export function PinInput({ length = 4, onComplete, error, disabled }: PinInputPr
   }, [length])
 
   return (
-    <View className="items-center gap-4" accessibilityLabel={t('auth.enterPin', 'Enter PIN')}>
+    <View className="items-center gap-4" accessibilityLabel={t('auth.enterPin', 'Enter PIN')} testID="pin-input">
       <View className="flex-row gap-3" accessibilityRole="none">
         {digits.map((digit, index) => (
           <TextInput
@@ -86,6 +86,7 @@ export function PinInput({ length = 4, onComplete, error, disabled }: PinInputPr
             autoFocus={index === 0}
             accessibilityLabel={t('auth.pinDigit', 'PIN digit {{n}}', { n: index + 1 })}
             accessibilityState={{ disabled: !!disabled }}
+            testID={`pin-digit-${index}`}
           />
         ))}
       </View>
@@ -95,6 +96,7 @@ export function PinInput({ length = 4, onComplete, error, disabled }: PinInputPr
           className="text-sm text-destructive"
           accessibilityRole="alert"
           accessibilityLiveRegion="assertive"
+          testID="pin-error"
         >
           {error}
         </Text>

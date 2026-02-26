@@ -38,6 +38,7 @@ export function CallCard({ call, onAnswer, onHangup, onSpam, isCurrent }: CallCa
       }`}
       accessibilityLabel={`${statusLabel}${call.callerLast4 ? `, caller ending ${call.callerLast4}` : ''}${call.status === 'in-progress' ? `, ${formatted}` : ''}`}
       accessibilityRole="summary"
+      testID="call-card"
     >
       <View className="mb-2 flex-row items-center justify-between">
         <View className="flex-row items-center gap-2">
@@ -71,6 +72,7 @@ export function CallCard({ call, onAnswer, onHangup, onSpam, isCurrent }: CallCa
             onPress={() => { haptic.medium(); onAnswer() }}
             accessibilityLabel={t('calls.answer', 'Answer')}
             accessibilityRole="button"
+            testID="call-answer-btn"
             hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
           >
             <Text className="text-center text-sm font-semibold text-white">
@@ -84,6 +86,7 @@ export function CallCard({ call, onAnswer, onHangup, onSpam, isCurrent }: CallCa
             onPress={() => { haptic.warning(); onHangup() }}
             accessibilityLabel={t('calls.hangup', 'Hang Up')}
             accessibilityRole="button"
+            testID="call-hangup-btn"
             hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
           >
             <Text className="text-center text-sm font-semibold text-white">
@@ -97,6 +100,7 @@ export function CallCard({ call, onAnswer, onHangup, onSpam, isCurrent }: CallCa
             onPress={() => { haptic.warning(); onSpam() }}
             accessibilityLabel={t('calls.spam', 'Report as Spam')}
             accessibilityRole="button"
+            testID="call-spam-btn"
             hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
           >
             <Text className="text-center text-sm text-destructive">

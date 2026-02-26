@@ -116,6 +116,7 @@ export default function LoginScreen() {
     <KeyboardAvoidingView
       className="flex-1 bg-background"
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+      testID="login-screen"
     >
       <View className="flex-1 items-center justify-center px-6">
         {/* Hub name / connection */}
@@ -140,11 +141,13 @@ export default function LoginScreen() {
               autoCapitalize="none"
               autoCorrect={false}
               keyboardType="url"
+              testID="login-hub-url-input"
             />
             <Pressable
               className="rounded-lg bg-primary px-4 py-3"
               onPress={handleHubConnect}
               disabled={loading}
+              testID="login-connect-btn"
             >
               <Text className="text-center font-semibold text-primary-foreground">
                 {t('auth.connect', 'Connect')}
@@ -187,18 +190,20 @@ export default function LoginScreen() {
               autoCorrect={false}
               secureTextEntry
               multiline
+              testID="login-nsec-input"
             />
             <Pressable
               className="rounded-lg bg-primary px-4 py-3"
               onPress={handleImportNsec}
               disabled={loading}
+              testID="login-import-btn"
             >
               <Text className="text-center font-semibold text-primary-foreground">
                 {t('auth.import', 'Import & Set PIN')}
               </Text>
             </Pressable>
 
-            <Pressable onPress={() => router.push('/onboarding')}>
+            <Pressable onPress={() => router.push('/onboarding')} testID="login-generate-btn">
               <Text className="text-center text-sm text-primary">
                 {t('auth.generateNew', 'Generate a new keypair')}
               </Text>

@@ -93,6 +93,7 @@ export default function OnboardingScreen() {
     <ScrollView
       className="flex-1 bg-background"
       contentContainerClassName="flex-1 items-center justify-center px-6 py-12"
+      testID="onboarding-screen"
     >
       {/* Step 1: Generate */}
       {step === 'generate' && (
@@ -106,6 +107,7 @@ export default function OnboardingScreen() {
           <Pressable
             className="w-full rounded-lg bg-primary px-6 py-4"
             onPress={handleGenerate}
+            testID="onboarding-generate-btn"
           >
             <Text className="text-center text-lg font-semibold text-primary-foreground">
               {t('onboarding.generate', 'Generate Keypair')}
@@ -131,7 +133,7 @@ export default function OnboardingScreen() {
             <Text className="text-sm font-medium text-muted-foreground">
               {t('onboarding.secretKey', 'Secret Key (nsec)')}
             </Text>
-            <View className="rounded-lg border border-border bg-card p-3">
+            <View className="rounded-lg border border-border bg-card p-3" testID="onboarding-nsec-display">
               <Text className="font-mono text-xs text-foreground" selectable>
                 {nsec}
               </Text>
@@ -154,6 +156,7 @@ export default function OnboardingScreen() {
           <Pressable
             className="rounded-lg border border-border bg-card px-4 py-3"
             onPress={handleCopyNsec}
+            testID="onboarding-copy-btn"
           >
             <Text className="text-center font-medium text-foreground">
               {copied
@@ -165,6 +168,7 @@ export default function OnboardingScreen() {
           <Pressable
             className="rounded-lg bg-primary px-4 py-3"
             onPress={handleBackupConfirm}
+            testID="onboarding-confirm-backup-btn"
           >
             <Text className="text-center font-semibold text-primary-foreground">
               {t('onboarding.continue', "I've saved my key")}

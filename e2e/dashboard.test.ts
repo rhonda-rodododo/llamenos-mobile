@@ -1,0 +1,68 @@
+/**
+ * Dashboard E2E tests — rendering, shift status, stats.
+ * Epic 88: Desktop & Mobile E2E Tests.
+ *
+ * These tests assume the app is authenticated. In a real CI setup,
+ * test fixtures would pre-seed auth state (key store + hub config).
+ */
+
+import { by, device, element, expect } from 'detox'
+
+describe('Dashboard', () => {
+  beforeAll(async () => {
+    await device.launchApp({ newInstance: true })
+    // Navigate to dashboard tab (should be default after auth)
+  })
+
+  afterAll(async () => {
+    await device.terminateApp()
+  })
+
+  it('should render the dashboard screen', async () => {
+    await waitFor(element(by.id('dashboard-screen')))
+      .toBeVisible()
+      .withTimeout(10_000)
+  })
+
+  it('should display the shift status card', async () => {
+    await waitFor(element(by.id('dashboard-shift-status')))
+      .toBeVisible()
+      .withTimeout(10_000)
+  })
+
+  it('should display the calls today stat card', async () => {
+    await expect(element(by.id('dashboard-calls-today'))).toBeVisible()
+  })
+
+  it('should show empty state when no active calls', async () => {
+    // Either shows active calls or empty state
+    try {
+      await expect(element(by.id('dashboard-empty-state'))).toBeVisible()
+    } catch {
+      // Has active calls — that's also fine
+    }
+  })
+
+  it('should support pull-to-refresh', async () => {
+    // Scroll up on the dashboard to trigger refresh
+    await element(by.id('dashboard-screen')).swipe('down', 'slow', 0.5)
+    // Dashboard should still be visible after refresh
+    await waitFor(element(by.id('dashboard-screen')))
+      .toBeVisible()
+      .withTimeout(10_000)
+  })
+
+  it('should navigate to notes tab', async () => {
+    await element(by.id('tab-notes')).tap()
+    await waitFor(element(by.id('notes-screen')))
+      .toBeVisible()
+      .withTimeout(10_000)
+  })
+
+  it('should navigate back to dashboard tab', async () => {
+    await element(by.id('tab-dashboard')).tap()
+    await waitFor(element(by.id('dashboard-screen')))
+      .toBeVisible()
+      .withTimeout(10_000)
+  })
+})

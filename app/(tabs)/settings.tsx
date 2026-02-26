@@ -124,6 +124,7 @@ export default function SettingsScreen() {
     <ScrollView
       className="flex-1 bg-background"
       contentContainerClassName="px-4 py-4 gap-4"
+      testID="settings-screen"
       refreshControl={
         <RefreshControl
           refreshing={false}
@@ -228,6 +229,7 @@ export default function SettingsScreen() {
                 accessibilityLabel={`${option.label} theme`}
                 accessibilityRole="radio"
                 accessibilityState={{ selected: themePref === option.value }}
+                testID={`settings-theme-${option.value}`}
               >
                 <Text
                   className={`text-center text-sm font-medium ${
@@ -251,6 +253,7 @@ export default function SettingsScreen() {
             onPress={() => { haptic.light(); setShowLangPicker(!showLangPicker) }}
             accessibilityLabel={`${t('settings.language', 'Language')}: ${languageLabels[savedLang ?? i18n.language] ?? 'English'}`}
             accessibilityRole="button"
+            testID="settings-language-picker"
           >
             <Text className="text-sm text-foreground">
               {languageLabels[savedLang ?? i18n.language] ?? 'English'}
@@ -311,6 +314,7 @@ export default function SettingsScreen() {
         onPress={handleLock}
         accessibilityLabel={t('settings.lock', 'Lock App')}
         accessibilityRole="button"
+        testID="settings-lock-btn"
       >
         <Text className="text-base font-medium text-foreground">
           {t('settings.lock', 'Lock App')}
@@ -325,6 +329,7 @@ export default function SettingsScreen() {
         onPress={handleLogout}
         accessibilityLabel={t('settings.logout', 'Log Out')}
         accessibilityRole="button"
+        testID="settings-wipe-btn"
       >
         <Text className="text-base font-medium text-destructive">
           {t('settings.logout', 'Log Out')}

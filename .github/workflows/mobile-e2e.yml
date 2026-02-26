@@ -1,0 +1,142 @@
+# CI workflow for mobile (React Native / Expo) E2E tests.
+# Runs Detox tests on iOS simulator and Android emulator.
+#
+# Trigger: PRs touching src/, app/, or e2e/, manual dispatch.
+# Epic 88: Desktop & Mobile E2E Tests.
+
+name: Mobile E2E Tests
+
+on:
+  pull_request:
+    paths:
+      - 'src/**'
+      - 'app/**'
+      - 'e2e/**'
+      - '.detoxrc.js'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  ios:
+    runs-on: macos-14
+    name: E2E (iOS Simulator)
+    timeout-minutes: 45
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+
+      - name: Install Bun
+        uses: oven-sh/setup-bun@4bc047ad259df6fc24a6c9b0f9a0cb08cf17fbe5 # v2.0.2
+        with:
+          bun-version: latest
+
+      - name: Install dependencies
+        run: bun install --frozen-lockfile
+
+      - name: Install CocoaPods
+        run: cd ios && pod install --repo-update
+        continue-on-error: true
+
+      - name: Boot iOS simulator
+        run: |
+          DEVICE_ID=$(xcrun simctl list devices available -j | \
+            python3 -c "import json,sys; devs=json.load(sys.stdin)['devices']; iphones=[d for v in devs.values() for d in v if 'iPhone 15' in d['name'] and d['isAvailable']]; print(iphones[0]['udid'] if iphones else '')")
+          if [ -z "$DEVICE_ID" ]; then
+            DEVICE_ID=$(xcrun simctl create "iPhone 15" "com.apple.CoreSimulator.SimDeviceType.iPhone-15" "com.apple.CoreSimulator.SimRuntime.iOS-17-5")
+          fi
+          xcrun simctl boot "$DEVICE_ID" 2>/dev/null || true
+
+      - name: Build for Detox (iOS Debug)
+        run: bunx detox build --configuration ios.sim.debug
+
+      - name: Run Detox tests (iOS)
+        run: bunx detox test --configuration ios.sim.debug --cleanup --headless
+        env:
+          DETOX_LOGLEVEL: verbose
+
+      - name: Upload Detox artifacts
+        if: failure()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: detox-ios-artifacts
+          path: artifacts/
+          retention-days: 3
+
+  android:
+    runs-on: ubuntu-latest
+    name: E2E (Android Emulator)
+    timeout-minutes: 45
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+
+      - name: Install Bun
+        uses: oven-sh/setup-bun@4bc047ad259df6fc24a6c9b0f9a0cb08cf17fbe5 # v2.0.2
+        with:
+          bun-version: latest
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@c5195efecf7bdfc987ee8bae7a71cb8b11521c00 # v4.7.1
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+
+      - name: Install dependencies
+        run: bun install --frozen-lockfile
+
+      - name: Enable KVM for Android emulator
+        run: |
+          echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
+          sudo udevadm control --reload-rules
+          sudo udevadm trigger --name-match=kvm
+
+      - name: AVD cache
+        uses: actions/cache@v4
+        id: avd-cache
+        with:
+          path: |
+            ~/.android/avd/*
+            ~/.android/adb*
+          key: avd-34-${{ runner.os }}
+
+      - name: Create AVD
+        if: steps.avd-cache.outputs.cache-hit != 'true'
+        uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: 34
+          target: google_apis
+          arch: x86_64
+          profile: Pixel 7
+          force-avd-creation: true
+          emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim
+          disable-animations: true
+          script: echo "AVD created"
+
+      - name: Build for Detox (Android Debug)
+        run: bunx detox build --configuration android.emu.debug
+
+      - name: Run Detox tests (Android)
+        uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: 34
+          target: google_apis
+          arch: x86_64
+          profile: Pixel 7
+          force-avd-creation: false
+          emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim
+          disable-animations: true
+          script: bunx detox test --configuration android.emu.debug --cleanup --headless
+        env:
+          DETOX_LOGLEVEL: verbose
+
+      - name: Upload Detox artifacts
+        if: failure()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: detox-android-artifacts
+          path: artifacts/
+          retention-days: 3

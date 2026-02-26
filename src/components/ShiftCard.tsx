@@ -26,6 +26,7 @@ export function ShiftCard({ shift, isSignedUp, onSignUp, onDrop, loading }: Shif
       className="rounded-xl border border-border bg-card p-4"
       accessibilityLabel={`${shift.name}, ${shift.startTime} to ${shift.endTime}, ${activeDays}`}
       accessibilityRole="summary"
+      testID="shift-card"
     >
       <View className="mb-2 flex-row items-center justify-between">
         <Text className="text-base font-semibold text-foreground" numberOfLines={1}>
@@ -83,6 +84,7 @@ export function ShiftCard({ shift, isSignedUp, onSignUp, onDrop, loading }: Shif
           accessibilityRole="button"
           accessibilityState={{ disabled: !!loading }}
           hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
+          testID={isSignedUp ? 'shift-drop-btn' : 'shift-signup-btn'}
         >
           <Text
             className={`text-sm font-medium ${
