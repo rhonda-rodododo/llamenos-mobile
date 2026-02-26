@@ -51,3 +51,7 @@ export const LABEL_BACKUP = 'llamenos:backup'
 // --- Server Nostr Identity ---
 export const LABEL_SERVER_NOSTR_KEY = 'llamenos:server-nostr-key'
 export const LABEL_SERVER_NOSTR_KEY_INFO = 'llamenos:server-nostr-key:v1'
+
+// --- Push Notification Encryption (Epic 86) ---
+export const LABEL_PUSH_WAKE = 'llamenos:push-wake'
+export const LABEL_PUSH_FULL = 'llamenos:push-full'

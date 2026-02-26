@@ -11,6 +11,7 @@ import { useAuthStore, useHubConfigStore } from '@/lib/store'
 import { useIsAdmin } from '@/hooks/usePermission'
 import * as keyManager from '@/lib/key-manager'
 import * as apiClient from '@/lib/api-client'
+import { unregisterDevices } from '@/lib/push-notifications'
 
 export default function SettingsScreen() {
   const { t } = useTranslation()
@@ -65,6 +66,7 @@ export default function SettingsScreen() {
           text: t('settings.logout', 'Log Out'),
           style: 'destructive',
           onPress: async () => {
+            await unregisterDevices()
             await keyManager.wipeKey()
             clearAuth()
             router.replace('/login')
