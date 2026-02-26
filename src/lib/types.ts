@@ -58,3 +58,126 @@ export interface HubConfig {
   features?: string[]
   customFields?: CustomFieldDefinition[]
 }
+
+// --- API Response Types ---
+
+/** Active call state */
+export interface ActiveCall {
+  id: string
+  status: 'ringing' | 'in-progress' | 'completed'
+  callerLast4?: string
+  answeredBy?: string
+  startedAt: string
+  hasTranscription: boolean
+  hasVoicemail: boolean
+}
+
+/** Historical call record */
+export interface CallRecord {
+  id: string
+  status: 'answered' | 'unanswered' | 'completed'
+  startedAt: string
+  duration?: number
+  callerLast4?: string
+  answeredBy?: string
+  hasRecording: boolean
+  hasVoicemail: boolean
+  hasTranscription: boolean
+  encryptedContent?: string
+  adminEnvelopes?: RecipientKeyEnvelope[]
+}
+
+/** Shift definition */
+export interface Shift {
+  id: string
+  name: string
+  startTime: string  // HH:MM
+  endTime: string    // HH:MM
+  days: number[]     // 0=Sun, 1=Mon, ..., 6=Sat
+  volunteerPubkeys: string[]
+}
+
+/** Shift status for current user */
+export interface ShiftStatus {
+  onShift: boolean
+  currentShift?: Shift
+  nextShift?: Shift
+}
+
+/** Encrypted note from the API */
+export interface EncryptedNote {
+  id: string
+  callId: string
+  authorPubkey: string
+  createdAt: string
+  updatedAt: string
+  encryptedContent: string
+  authorEnvelope?: KeyEnvelope
+  adminEnvelopes?: RecipientKeyEnvelope[]
+  ephemeralPubkey?: string
+}
+
+/** Volunteer info */
+export interface Volunteer {
+  pubkey: string
+  name: string
+  phone?: string
+  active: boolean
+  roles: string[]
+}
+
+/** Presence summary (non-admin) */
+export interface PresenceSummary {
+  hasAvailable: boolean
+}
+
+/** Presence detail (admin) */
+export interface PresenceDetail {
+  available: number
+  onCall: number
+  total: number
+}
+
+/** Ban list entry */
+export interface BanEntry {
+  id: string
+  phoneHash: string
+  reason?: string
+  createdAt: string
+  createdBy: string
+}
+
+/** Audit log entry */
+export interface AuditEntry {
+  id: string
+  action: string
+  actorPubkey: string
+  targetPubkey?: string
+  details?: string
+  createdAt: string
+  entryHash?: string
+  previousEntryHash?: string
+}
+
+/** Conversation (messaging) */
+export interface Conversation {
+  id: string
+  channelType: string
+  status: 'waiting' | 'active' | 'closed'
+  assignedTo?: string
+  contactIdentifier: string
+  lastMessageAt?: string
+  createdAt: string
+}
+
+/** Conversation message */
+export interface ConversationMessage {
+  id: string
+  conversationId: string
+  direction: 'inbound' | 'outbound'
+  encryptedContent: string
+  authorEnvelope?: KeyEnvelope
+  adminEnvelopes?: RecipientKeyEnvelope[]
+  createdAt: string
+  status?: string
+}

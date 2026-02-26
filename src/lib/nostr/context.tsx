@@ -6,6 +6,7 @@
  */
 
 import { createContext, useContext, useEffect, useRef, useState, type ReactNode } from 'react'
+import NetInfo from '@react-native-community/netinfo'
 import { RelayManager } from './relay'
 import type { RelayState } from './types'
 
@@ -71,7 +72,17 @@ export function NostrProvider({
     relayRef.current = manager
     manager.connect().catch(() => {})
 
+    // Network-aware reconnect — reconnect when network comes back online
+    const unsubNetInfo = NetInfo.addEventListener(netState => {
+      if (netState.isConnected && relayRef.current) {
+        if (relayRef.current.getState() === 'disconnected') {
+          relayRef.current.connect().catch(() => {})
+        }
+      }
+    })
+
     return () => {
+      unsubNetInfo()
       manager.close()
       relayRef.current = null
       setState('disconnected')

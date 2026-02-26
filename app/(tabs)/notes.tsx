@@ -1,19 +1,92 @@
 /**
- * Notes screen — view call notes.
- * Placeholder until Epic 84 implements full screens.
+ * Notes screen — paginated list of E2EE encrypted notes.
+ * Decryption happens client-side using the user's secret key.
  */
 
-import { View, Text } from 'react-native'
+import { useState, useCallback } from 'react'
+import { View, Text, FlatList, ActivityIndicator, RefreshControl } from 'react-native'
 import { useTranslation } from 'react-i18next'
+import { useQuery } from '@tanstack/react-query'
+import { NoteCard } from '@/components/NoteCard'
+import { useAuthStore } from '@/lib/store'
+import * as apiClient from '@/lib/api-client'
+
+const PAGE_SIZE = 20
 
 export default function NotesScreen() {
   const { t } = useTranslation()
+  const publicKey = useAuthStore(s => s.publicKey)
+  const [page, setPage] = useState(1)
+
+  const { data, isLoading, isFetching, refetch } = useQuery({
+    queryKey: ['notes', page],
+    queryFn: () => apiClient.listNotes({ page, limit: PAGE_SIZE }),
+    enabled: !!publicKey,
+  })
+
+  const notes = data?.notes ?? []
+  const total = data?.total ?? 0
+  const hasMore = notes.length === PAGE_SIZE && page * PAGE_SIZE < total
+
+  const loadMore = useCallback(() => {
+    if (hasMore && !isFetching) {
+      setPage(p => p + 1)
+    }
+  }, [hasMore, isFetching])
+
+  const onRefresh = useCallback(async () => {
+    setPage(1)
+    await refetch()
+  }, [refetch])
+
+  if (isLoading) {
+    return (
+      <View className="flex-1 items-center justify-center bg-background">
+        <ActivityIndicator size="large" />
+      </View>
+    )
+  }
 
   return (
-    <View className="flex-1 items-center justify-center bg-background px-6">
-      <Text className="text-lg text-muted-foreground">
-        {t('notes.empty', 'No notes yet')}
-      </Text>
-    </View>
+    <FlatList
+      className="flex-1 bg-background"
+      contentContainerClassName="px-4 py-4"
+      data={notes}
+      keyExtractor={item => item.id}
+      renderItem={({ item }) => (
+        <View className="mb-3">
+          <NoteCard note={item} myPubkey={publicKey} />
+        </View>
+      )}
+      ListEmptyComponent={
+        <View className="items-center py-12">
+          <Text className="text-base text-muted-foreground">
+            {t('notes.empty', 'No notes yet')}
+          </Text>
+          <Text className="mt-1 text-sm text-muted-foreground">
+            {t('notes.emptyHint', 'Notes will appear here after you take calls')}
+          </Text>
+        </View>
+      }
+      ListHeaderComponent={
+        <Text className="mb-4 text-lg font-semibold text-foreground">
+          {total > 0
+            ? t('notes.count', '{{count}} notes', { count: total })
+            : t('notes.title', 'Call Notes')}
+        </Text>
+      }
+      refreshControl={
+        <RefreshControl refreshing={isFetching && page === 1} onRefresh={onRefresh} />
+      }
+      onEndReached={loadMore}
+      onEndReachedThreshold={0.5}
+      ListFooterComponent={
+        isFetching && page > 1 ? (
+          <View className="items-center py-4">
+            <ActivityIndicator size="small" />
+          </View>
+        ) : null
+      }
+    />
   )
 }

@@ -1,61 +1,182 @@
 /**
  * Dashboard — main screen after authentication.
- * Shows active call status, on-shift status, and quick actions.
- * Placeholder until Epic 84 implements full screens.
+ * Shows shift status, active calls, today's stats, and relay status.
  */
 
-import { View, Text, Pressable } from 'react-native'
+import { useState, useEffect, useCallback } from 'react'
+import { View, Text, ScrollView, RefreshControl, Pressable } from 'react-native'
 import { useTranslation } from 'react-i18next'
 import { useAuthStore, useHubConfigStore } from '@/lib/store'
+import { useCalls, useShiftStatus, usePresence } from '@/lib/hooks'
+import { CallCard } from '@/components/CallCard'
+import { RelayStatus } from '@/components/RelayStatus'
+import * as apiClient from '@/lib/api-client'
 
 export default function DashboardScreen() {
   const { t } = useTranslation()
   const publicKey = useAuthStore(s => s.publicKey)
-  const role = useAuthStore(s => s.role)
+  const isAdmin = useAuthStore(s => s.isAdmin)
   const hubName = useHubConfigStore(s => s.hubName)
+  const hubId = useHubConfigStore(s => s.hubUrl) // Hub URL serves as hub identifier
+
+  const { ringingCalls, currentCall, answerCall, hangupCall, reportSpam } = useCalls(hubId ?? undefined, publicKey)
+  const { onShift, currentShift, nextShift, loading: shiftLoading, refetch: refetchShift } = useShiftStatus()
+  const { hasAvailable } = usePresence(hubId ?? undefined)
+  const [todayCount, setTodayCount] = useState(0)
+  const [refreshing, setRefreshing] = useState(false)
+  const [onBreak, setOnBreak] = useState(false)
+
+  const fetchTodayCount = useCallback(async () => {
+    try {
+      const { count } = await apiClient.getCallsTodayCount()
+      setTodayCount(count)
+    } catch {
+      // Silently fail
+    }
+  }, [])
+
+  useEffect(() => {
+    fetchTodayCount()
+    const interval = setInterval(fetchTodayCount, 30_000)
+    return () => clearInterval(interval)
+  }, [fetchTodayCount])
+
+  const onRefresh = useCallback(async () => {
+    setRefreshing(true)
+    await Promise.all([refetchShift(), fetchTodayCount()])
+    setRefreshing(false)
+  }, [refetchShift, fetchTodayCount])
+
+  const toggleBreak = useCallback(async () => {
+    const newBreak = !onBreak
+    setOnBreak(newBreak)
+    try {
+      await apiClient.updateMyAvailability({ onBreak: newBreak })
+    } catch {
+      setOnBreak(!newBreak)
+    }
+  }, [onBreak])
 
   return (
-    <View className="flex-1 items-center justify-center bg-background px-6">
-      <Text className="mb-2 text-2xl font-bold text-foreground">
-        {hubName ?? t('app.name', 'Hotline')}
-      </Text>
-      <Text className="mb-8 text-base text-muted-foreground">
-        {t('dashboard.welcome', 'Welcome back')}
-      </Text>
+    <ScrollView
+      className="flex-1 bg-background"
+      contentContainerClassName="px-4 py-4 gap-4"
+      refreshControl={
+        <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+      }
+    >
+      {/* Header */}
+      <View className="flex-row items-center justify-between">
+        <Text className="text-2xl font-bold text-foreground">
+          {hubName ?? t('app.name', 'Hotline')}
+        </Text>
+        <RelayStatus />
+      </View>
 
-      <View className="w-full max-w-sm gap-4">
-        {/* Status card */}
-        <View className="rounded-xl border border-border bg-card p-4">
-          <Text className="mb-1 text-sm font-medium text-muted-foreground">
-            {t('dashboard.status', 'Status')}
-          </Text>
-          <Text className="text-lg font-semibold text-foreground">
-            {t('dashboard.offShift', 'Off Shift')}
-          </Text>
-        </View>
-
-        {/* Role indicator */}
-        <View className="rounded-xl border border-border bg-card p-4">
-          <Text className="mb-1 text-sm font-medium text-muted-foreground">
-            {t('dashboard.role', 'Role')}
-          </Text>
-          <Text className="text-lg font-semibold capitalize text-foreground">
-            {role ?? t('dashboard.unknown', 'Unknown')}
-          </Text>
-        </View>
-
-        {/* Public key (truncated) */}
-        {publicKey && (
-          <View className="rounded-xl border border-border bg-card p-4">
-            <Text className="mb-1 text-sm font-medium text-muted-foreground">
-              {t('dashboard.identity', 'Identity')}
+      {/* Shift status */}
+      <View className="rounded-xl border border-border bg-card p-4">
+        <View className="flex-row items-center justify-between">
+          <View>
+            <Text className="text-sm font-medium text-muted-foreground">
+              {t('dashboard.shiftStatus', 'Shift Status')}
             </Text>
-            <Text className="font-mono text-xs text-foreground" selectable>
-              {publicKey.slice(0, 8)}...{publicKey.slice(-8)}
+            <Text className="text-lg font-semibold text-foreground">
+              {onShift
+                ? onBreak
+                  ? t('dashboard.onBreak', 'On Break')
+                  : t('dashboard.onShift', 'On Shift')
+                : t('dashboard.offShift', 'Off Shift')}
             </Text>
           </View>
+          {onShift && (
+            <Pressable
+              className={`rounded-lg px-4 py-2 ${onBreak ? 'bg-primary' : 'border border-border'}`}
+              onPress={toggleBreak}
+            >
+              <Text className={`text-sm font-medium ${onBreak ? 'text-primary-foreground' : 'text-foreground'}`}>
+                {onBreak ? t('dashboard.endBreak', 'End Break') : t('dashboard.takeBreak', 'Break')}
+              </Text>
+            </Pressable>
+          )}
+        </View>
+        {currentShift && (
+          <Text className="mt-1 text-xs text-muted-foreground">
+            {currentShift.name} ({currentShift.startTime} – {currentShift.endTime})
+          </Text>
+        )}
+        {!onShift && nextShift && (
+          <Text className="mt-1 text-xs text-muted-foreground">
+            {t('dashboard.nextShift', 'Next: {{name}} at {{time}}', {
+              name: nextShift.name,
+              time: nextShift.startTime,
+            })}
+          </Text>
         )}
       </View>
-    </View>
+
+      {/* Stats row */}
+      <View className="flex-row gap-3">
+        <View className="flex-1 rounded-xl border border-border bg-card p-4">
+          <Text className="text-sm text-muted-foreground">
+            {t('dashboard.callsToday', 'Calls Today')}
+          </Text>
+          <Text className="text-2xl font-bold text-foreground">{todayCount}</Text>
+        </View>
+        <View className="flex-1 rounded-xl border border-border bg-card p-4">
+          <Text className="text-sm text-muted-foreground">
+            {t('dashboard.volunteers', 'Volunteers')}
+          </Text>
+          <Text className="text-2xl font-bold text-foreground">
+            {hasAvailable
+              ? t('dashboard.available', 'Available')
+              : t('dashboard.none', 'None')}
+          </Text>
+        </View>
+      </View>
+
+      {/* Current call */}
+      {currentCall && (
+        <View>
+          <Text className="mb-2 text-sm font-medium text-foreground">
+            {t('dashboard.yourCall', 'Your Active Call')}
+          </Text>
+          <CallCard
+            call={currentCall}
+            isCurrent
+            onHangup={() => hangupCall(currentCall.id)}
+          />
+        </View>
+      )}
+
+      {/* Ringing calls */}
+      {ringingCalls.length > 0 && !onBreak && (
+        <View>
+          <Text className="mb-2 text-sm font-medium text-foreground">
+            {t('dashboard.incomingCalls', 'Incoming Calls')}
+          </Text>
+          <View className="gap-2">
+            {ringingCalls.map(call => (
+              <CallCard
+                key={call.id}
+                call={call}
+                onAnswer={() => answerCall(call.id)}
+                onSpam={() => reportSpam(call.id)}
+              />
+            ))}
+          </View>
+        </View>
+      )}
+
+      {/* Empty state when nothing is happening */}
+      {!currentCall && ringingCalls.length === 0 && !shiftLoading && (
+        <View className="items-center py-8">
+          <Text className="text-base text-muted-foreground">
+            {onShift
+              ? t('dashboard.waiting', 'Waiting for calls...')
+              : t('dashboard.noActivity', 'No active calls')}
+          </Text>
+        </View>
+      )}
+    </ScrollView>
   )
 }
