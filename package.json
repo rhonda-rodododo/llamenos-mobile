@@ -1,7 +1,7 @@
 {
   "name": "llamenos-mobile",
   "version": "0.1.0",
-  "main": "expo-router/entry",
+  "main": "index.js",
   "scripts": {
     "start": "expo start",
     "android": "expo start --android",
@@ -11,18 +11,38 @@
     "lint": "expo lint"
   },
   "dependencies": {
+    "@bacons/text-decoder": "^0.0.0",
+    "@noble/ciphers": "^2.1.1",
+    "@noble/curves": "^2.0.1",
+    "@noble/hashes": "^2.0.1",
+    "@tanstack/react-query": "^5.90.21",
     "expo": "~55.0.2",
+    "expo-clipboard": "^55.0.8",
     "expo-constants": "~18.0.4",
+    "expo-crypto": "~55.0.8",
     "expo-linking": "~7.1.4",
+    "expo-localization": "~55.0.8",
+    "expo-network": "~55.0.8",
     "expo-router": "~5.0.5",
+    "expo-secure-store": "~55.0.8",
+    "expo-standard-web-crypto": "^55.0.5",
     "expo-status-bar": "~55.0.4",
+    "i18next": "^25.8.13",
+    "nativewind": "^4.2.2",
+    "nostr-tools": "^2.23.1",
     "react": "19.2.0",
+    "react-i18next": "^16.5.4",
     "react-native": "0.83.2",
+    "react-native-mmkv": "^4.1.2",
+    "react-native-nitro-modules": "^0.33.9",
+    "react-native-reanimated": "4.2.1",
     "react-native-safe-area-context": "~5.4.0",
-    "react-native-screens": "~4.11.1"
+    "react-native-screens": "~4.11.1",
+    "zustand": "^5.0.11"
   },
   "devDependencies": {
     "@types/react": "~19.2.2",
+    "tailwindcss": "^3.4.17",
     "typescript": "~5.9.2"
   },
   "private": true
