@@ -40,6 +40,11 @@ Pod::Spec.new do |s|
     'OTHER_SWIFT_FLAGS' => '$(inherited) -Xcc -fmodule-map-file=$(PODS_ROOT)/../../modules/llamenos-core/ios/LlamenosCoreFFI.modulemap',
     'HEADER_SEARCH_PATHS' => '$(inherited) $(PODS_ROOT)/../../modules/llamenos-core/ios',
     'EXCLUDED_ARCHS[sdk=iphonesimulator*]' => 'x86_64',
+    # Force-load the Rust static archive inside the vendored framework.
+    # The framework binary is a renamed .a file; the linker won't extract
+    # C/Rust FFI symbols from it via -framework alone. Without -force_load,
+    # UniFFI symbols (_uniffi_llamenos_core_*) are undefined at link time.
+    'OTHER_LDFLAGS' => '$(inherited) -force_load $(PODS_XCFRAMEWORKS_BUILD_DIR)/LlamenosCore/LlamenosCoreFFI.framework/LlamenosCoreFFI',
   }
 
   s.dependency 'ExpoModulesCore'
