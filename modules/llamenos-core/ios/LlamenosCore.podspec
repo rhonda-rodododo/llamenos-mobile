@@ -11,26 +11,14 @@ Pod::Spec.new do |s|
   # Expo Module bridge + UniFFI-generated Swift bindings
   s.source_files   = '*.swift'
 
-  # Vendored Rust static library as XCFramework
+  # Vendored Rust static library as XCFramework.
+  # The XCFramework contains .framework bundles (not raw .a files) to work
+  # around CocoaPods issues #9528/#11372 with static library XCFrameworks.
+  # The framework module LlamenosCoreFFI is auto-discoverable by the linker.
   s.vendored_frameworks = 'LlamenosCore.xcframework'
 
-  # Preserve the FFI header and modulemap for the Clang importer
+  # Preserve standalone FFI header and modulemap (for debugging / external use)
   s.preserve_paths = 'LlamenosCoreFFI.h', 'LlamenosCoreFFI.modulemap'
-
-  # Make the modulemap discoverable so `import LlamenosCoreFFI` works in UniFFI bindings.
-  # Clang only auto-discovers module.modulemap, not LlamenosCoreFFI.modulemap,
-  # so we pass the path explicitly via -fmodule-map-file.
-  # pod_target_xcconfig: applies to the LlamenosCore pod compile.
-  # user_target_xcconfig: propagates to consuming targets (ExpoModulesProvider, app)
-  #   that transitively depend on the LlamenosCoreFFI module.
-  s.pod_target_xcconfig = {
-    'OTHER_SWIFT_FLAGS' => '-Xcc -fmodule-map-file=$(PODS_TARGET_SRCROOT)/LlamenosCoreFFI.modulemap',
-    'HEADER_SEARCH_PATHS' => '$(PODS_TARGET_SRCROOT)',
-  }
-  s.user_target_xcconfig = {
-    'OTHER_SWIFT_FLAGS' => '$(inherited) -Xcc -fmodule-map-file=$(PODS_ROOT)/../../modules/llamenos-core/ios/LlamenosCoreFFI.modulemap',
-    'HEADER_SEARCH_PATHS' => '$(inherited) $(PODS_ROOT)/../../modules/llamenos-core/ios',
-  }
 
   s.dependency 'ExpoModulesCore'
 
