@@ -31,6 +31,7 @@ export function OfflineBanner() {
       className="flex-row items-center bg-destructive/10 px-4 py-2"
       accessibilityRole="alert"
       accessibilityLiveRegion="polite"
+      testID="offline-banner"
     >
       <Text className="text-sm font-medium text-destructive">
         {!isOnline
