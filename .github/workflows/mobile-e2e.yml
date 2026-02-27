@@ -50,6 +50,11 @@ jobs:
       - name: Install applesimutils
         run: brew tap wix/brew && brew install applesimutils
 
+      - name: Download llamenos-core native libs (iOS)
+        run: ./scripts/download-core-libs.sh ios
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
       - name: Expo prebuild (generate ios/ and android/ dirs)
         run: bunx expo prebuild --no-install --platform ios
 
@@ -60,7 +65,7 @@ jobs:
           path: |
             ios/Pods
             ios/Podfile.lock
-          key: pods-${{ runner.os }}-${{ hashFiles('ios/Podfile.lock') }}
+          key: pods-${{ runner.os }}-${{ hashFiles('bun.lock', 'app.json') }}
           restore-keys: |
             pods-${{ runner.os }}-
 
@@ -148,6 +153,11 @@ jobs:
           emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -no-snapshot
           disable-animations: true
           script: echo "AVD created"
+
+      - name: Download llamenos-core native libs (Android)
+        run: ./scripts/download-core-libs.sh android
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Expo prebuild (generate android/ dir)
         run: bunx expo prebuild --no-install --platform android
