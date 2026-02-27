@@ -33,6 +33,14 @@ export default function AdminLayout() {
         name="settings"
         options={{ title: t('admin.settings', 'Settings') }}
       />
+      <Stack.Screen
+        name="contacts"
+        options={{ title: t('contacts.title', 'Contacts') }}
+      />
+      <Stack.Screen
+        name="contact/[hash]"
+        options={{ title: t('contacts.contact', 'Contact') }}
+      />
     </Stack>
   )
 }

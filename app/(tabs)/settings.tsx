@@ -291,6 +291,7 @@ export default function SettingsScreen() {
           </Text>
           {[
             { route: '/admin/volunteers', label: t('admin.volunteers', 'Volunteers') },
+            { route: '/admin/contacts', label: t('contacts.title', 'Contacts'), testID: 'admin-contacts-link' },
             { route: '/admin/bans', label: t('admin.bans', 'Ban List') },
             { route: '/admin/audit', label: t('admin.audit', 'Audit Log') },
             { route: '/admin/settings', label: t('admin.settings', 'Hub Settings') },
@@ -301,6 +302,7 @@ export default function SettingsScreen() {
               onPress={() => { haptic.light(); router.push(item.route as never) }}
               accessibilityLabel={item.label}
               accessibilityRole="button"
+              {...('testID' in item && item.testID ? { testID: item.testID } : {})}
             >
               <Text className="text-base font-medium text-foreground">{item.label}</Text>
             </Pressable>
