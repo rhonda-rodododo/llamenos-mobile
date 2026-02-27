@@ -129,16 +129,16 @@ copy_android_from_local() {
 }
 
 copy_ios_from_local() {
-  if [[ -d "${CORE_DIR}/dist/ios/LlamenosCore.xcframework" ]]; then
+  if [[ -d "${CORE_DIR}/dist/ios/LlamenosCoreFFI.xcframework" ]]; then
     echo "  Copying local iOS libs from ${CORE_DIR}/dist/ios/..."
-    cp -R "${CORE_DIR}/dist/ios/LlamenosCore.xcframework" "${MODULE_DIR}/ios/"
+    cp -R "${CORE_DIR}/dist/ios/LlamenosCoreFFI.xcframework" "${MODULE_DIR}/ios/"
     cp "${CORE_DIR}/dist/ios/LlamenosCore.swift" "${MODULE_DIR}/ios/" 2>/dev/null || true
     cp "${CORE_DIR}/dist/ios/LlamenosCoreFFI.h" "${MODULE_DIR}/ios/" 2>/dev/null || true
     cp "${CORE_DIR}/dist/ios/LlamenosCoreFFI.modulemap" "${MODULE_DIR}/ios/" 2>/dev/null || true
     return 0
   fi
   # Also check bindings/swift for generated files
-  if [[ -d "${CORE_DIR}/bindings/swift" ]] && [[ -d "${MODULE_DIR}/ios/LlamenosCore.xcframework" ]]; then
+  if [[ -d "${CORE_DIR}/bindings/swift" ]] && [[ -d "${MODULE_DIR}/ios/LlamenosCoreFFI.xcframework" ]]; then
     echo "  iOS XCFramework already present; copying Swift bindings..."
     cp "${CORE_DIR}/bindings/swift/LlamenosCore.swift" "${MODULE_DIR}/ios/" 2>/dev/null || true
     cp "${CORE_DIR}/bindings/swift/LlamenosCoreFFI.h" "${MODULE_DIR}/ios/" 2>/dev/null || true
@@ -181,7 +181,7 @@ do_ios() {
   local artifact="llamenos-core-ios-v${stripped}.tar.gz"
 
   # The iOS tarball contains LlamenosCore.swift, LlamenosCoreFFI.h,
-  # LlamenosCoreFFI.modulemap, and LlamenosCore.xcframework/ at root
+  # LlamenosCoreFFI.modulemap, and LlamenosCoreFFI.xcframework/ at root
   if download_release_artifact "$artifact" "${MODULE_DIR}/ios"; then
     echo "  iOS libs installed."
   elif copy_ios_from_local; then

@@ -14,7 +14,7 @@ Pod::Spec.new do |s|
   # Vendored Rust static library as XCFramework.
   # The XCFramework contains .framework bundles (not raw .a files) to work
   # around CocoaPods issues #9528/#11372 with static library XCFrameworks.
-  s.vendored_frameworks = 'LlamenosCore.xcframework'
+  s.vendored_frameworks = 'LlamenosCoreFFI.xcframework'
 
   # Preserve standalone FFI header and modulemap for compilation.
   # The framework modulemap handles linking, but the standalone modulemap
