@@ -162,6 +162,16 @@ jobs:
       - name: Expo prebuild (generate android/ dir)
         run: bunx expo prebuild --no-install --platform android
 
+      - name: Cache Gradle wrapper + dependencies
+        uses: actions/cache@5a3ec84eff668545956fd18022155c47e93e2684 # v4.2.3
+        with:
+          path: |
+            ~/.gradle/wrapper
+            ~/.gradle/caches
+          key: gradle-${{ runner.os }}-${{ hashFiles('android/gradle/wrapper/gradle-wrapper.properties') }}
+          restore-keys: |
+            gradle-${{ runner.os }}-
+
       - name: Build for Detox (Android Debug)
         run: bunx detox build --configuration android.emu.debug
 
