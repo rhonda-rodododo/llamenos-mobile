@@ -12,17 +12,18 @@ import type { ConversationMessage } from '@/lib/types'
 interface MessageBubbleProps {
   message: ConversationMessage
   myPubkey: string | null
+  compact?: boolean
 }
 
 const STATUS_LABELS: Record<string, string> = {
   pending: '...',
-  sent: '✓',
-  delivered: '✓✓',
-  read: '✓✓',
+  sent: '\u2713',
+  delivered: '\u2713\u2713',
+  read: '\u2713\u2713',
   failed: '!',
 }
 
-export function MessageBubble({ message, myPubkey }: MessageBubbleProps) {
+export function MessageBubble({ message, myPubkey, compact }: MessageBubbleProps) {
   const [text, setText] = useState<string | null>(null)
   const [decryptError, setDecryptError] = useState(false)
 
@@ -30,7 +31,8 @@ export function MessageBubble({ message, myPubkey }: MessageBubbleProps) {
 
   const decrypt = useCallback(async () => {
     try {
-      if (!message.encryptedContent || !message.adminEnvelopes?.length || !myPubkey) {
+      const envelopes = message.readerEnvelopes ?? []
+      if (!message.encryptedContent || !envelopes.length || !myPubkey) {
         setDecryptError(true)
         return
       }
@@ -38,7 +40,7 @@ export function MessageBubble({ message, myPubkey }: MessageBubbleProps) {
       const sk = keyManager.getSecretKey()
       const result = decryptMessage(
         message.encryptedContent,
-        message.adminEnvelopes,
+        envelopes,
         sk,
         myPubkey,
       )
@@ -61,10 +63,12 @@ export function MessageBubble({ message, myPubkey }: MessageBubbleProps) {
     minute: '2-digit',
   })
 
+  const paddingClass = compact ? 'px-2.5 py-1.5' : 'px-3 py-2'
+
   return (
     <View className={`mb-2 max-w-[85%] ${isOutbound ? 'self-end' : 'self-start'}`}>
       <View
-        className={`rounded-2xl px-3 py-2 ${
+        className={`rounded-2xl ${paddingClass} ${
           isOutbound
             ? 'rounded-br-md bg-primary'
             : 'rounded-bl-md bg-muted'

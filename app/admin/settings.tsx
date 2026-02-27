@@ -643,15 +643,16 @@ function CallSettingsSection() {
 const FIELD_TYPES: Array<{ value: CustomFieldDefinition['type']; label: string }> = [
   { value: 'text', label: 'Text' },
   { value: 'number', label: 'Number' },
-  { value: 'boolean', label: 'Checkbox' },
+  { value: 'checkbox', label: 'Checkbox' },
   { value: 'select', label: 'Select' },
-  { value: 'multiselect', label: 'Multi-select' },
+  { value: 'textarea', label: 'Text Area' },
 ]
 
-const FIELD_CONTEXTS: Array<{ value: NonNullable<CustomFieldDefinition['context']>; label: string }> = [
-  { value: 'note', label: 'Note' },
-  { value: 'report', label: 'Report' },
-  { value: 'both', label: 'Both' },
+const FIELD_CONTEXTS: Array<{ value: CustomFieldDefinition['context']; label: string }> = [
+  { value: 'call-notes', label: 'Call Notes' },
+  { value: 'conversation-notes', label: 'Conversation Notes' },
+  { value: 'reports', label: 'Reports' },
+  { value: 'all', label: 'All Record Types' },
 ]
 
 function CustomFieldsSection() {
@@ -669,7 +670,7 @@ function CustomFieldsSection() {
   const [newLabel, setNewLabel] = useState('')
   const [newType, setNewType] = useState<CustomFieldDefinition['type']>('text')
   const [newRequired, setNewRequired] = useState(false)
-  const [newContext, setNewContext] = useState<NonNullable<CustomFieldDefinition['context']>>('note')
+  const [newContext, setNewContext] = useState<CustomFieldDefinition['context']>('all')
   const [newOptions, setNewOptions] = useState('')
   const [showTypePicker, setShowTypePicker] = useState(false)
   const [showContextPicker, setShowContextPicker] = useState(false)
@@ -688,14 +689,18 @@ function CustomFieldsSection() {
 
     const newField: CustomFieldDefinition = {
       id: `field-${Date.now()}`,
+      name: newLabel.trim().toLowerCase().replace(/\s+/g, '-'),
       label: newLabel.trim(),
       type: newType,
       required: newRequired,
       context: newContext,
       visibleToVolunteers: true,
+      editableByVolunteers: true,
+      order: fields.length,
+      createdAt: new Date().toISOString(),
     }
 
-    if ((newType === 'select' || newType === 'multiselect') && newOptions.trim()) {
+    if (newType === 'select' && newOptions.trim()) {
       newField.options = newOptions.split(',').map(o => o.trim()).filter(Boolean)
     }
 
@@ -703,7 +708,7 @@ function CustomFieldsSection() {
     setNewLabel('')
     setNewType('text')
     setNewRequired(false)
-    setNewContext('note')
+    setNewContext('all')
     setNewOptions('')
     setShowAddForm(false)
   }, [newLabel, newType, newRequired, newContext, newOptions, fields, saveMutation])
@@ -742,9 +747,11 @@ function CustomFieldsSection() {
                   <View className="rounded-full bg-primary/10 px-2 py-0.5">
                     <Text className="text-xs text-primary">{field.type}</Text>
                   </View>
-                  {field.context && field.context !== 'both' && (
+                  {field.context && field.context !== 'all' && (
                     <View className="rounded-full bg-muted px-2 py-0.5">
-                      <Text className="text-xs text-muted-foreground">{field.context}</Text>
+                      <Text className="text-xs text-muted-foreground">
+                        {FIELD_CONTEXTS.find(fc => fc.value === field.context)?.label ?? field.context}
+                      </Text>
                     </View>
                   )}
                   {field.required && (
@@ -810,7 +817,7 @@ function CustomFieldsSection() {
           </FormField>
 
           {/* Options input for select types */}
-          {(newType === 'select' || newType === 'multiselect') && (
+          {newType === 'select' && (
             <FormField>
               <FormLabel text={t('customFields.options', 'Options')} />
               <TextInput

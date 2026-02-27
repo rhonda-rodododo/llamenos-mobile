@@ -19,11 +19,13 @@ import type {
   AuditEntry,
   Conversation,
   ConversationMessage,
+  ContactSummary,
   CustomFieldDefinition,
   TelephonySettings,
   SpamSettings,
   CallSettings,
   Role,
+  RecipientKeyEnvelope,
 } from './types'
 
 export class ApiError extends Error {
@@ -179,7 +181,8 @@ export function listNotes(params?: { callId?: string; page?: number; limit?: num
 }
 
 export function createNote(data: {
-  callId: string
+  callId?: string
+  conversationId?: string
   encryptedContent: string
   authorEnvelope: { wrappedKey: string; ephemeralPubkey: string }
   adminEnvelopes?: { pubkey: string; wrappedKey: string; ephemeralPubkey: string }[]
@@ -193,6 +196,17 @@ export function updateNote(noteId: string, data: {
   adminEnvelopes?: { pubkey: string; wrappedKey: string; ephemeralPubkey: string }[]
 }) {
   return api.put<{ success: boolean }>(`/api/notes/${noteId}`, data)
+}
+
+export function listNoteReplies(noteId: string) {
+  return api.get<{ replies: ConversationMessage[] }>(`/api/notes/${noteId}/replies`)
+}
+
+export function createNoteReply(noteId: string, data: {
+  encryptedContent: string
+  readerEnvelopes: RecipientKeyEnvelope[]
+}) {
+  return api.post<{ reply: ConversationMessage }>(`/api/notes/${noteId}/replies`, data)
 }
 
 // --- Volunteers ---
@@ -266,6 +280,20 @@ export function listConversations() {
 
 export function getConversationMessages(conversationId: string) {
   return api.get<{ messages: ConversationMessage[] }>(`/api/conversations/${conversationId}/messages`)
+}
+
+// --- Contacts ---
+
+export function listContacts(params?: { page?: number; limit?: number }) {
+  const searchParams = new URLSearchParams()
+  if (params?.page) searchParams.set('page', String(params.page))
+  if (params?.limit) searchParams.set('limit', String(params.limit ?? 50))
+  const qs = searchParams.toString()
+  return api.get<{ contacts: ContactSummary[]; total: number }>(`/api/contacts${qs ? `?${qs}` : ''}`)
+}
+
+export function getContactTimeline(hash: string) {
+  return api.get<{ notes: EncryptedNote[]; conversations: Conversation[] }>(`/api/contacts/${hash}`)
 }
 
 // --- Admin: Settings ---

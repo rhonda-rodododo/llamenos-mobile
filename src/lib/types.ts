@@ -29,15 +29,31 @@ export interface EncryptedKeyData {
   pubkey: string     // truncated SHA-256 hash of pubkey for identification
 }
 
-/** Custom field definition for call notes */
+/** Custom field context — which record types a field appears in */
+export type CustomFieldContext = 'call-notes' | 'conversation-notes' | 'reports' | 'all'
+
+/** Custom field definition for notes/reports */
 export interface CustomFieldDefinition {
   id: string
+  name: string
   label: string
-  type: 'text' | 'number' | 'boolean' | 'select' | 'multiselect'
+  type: 'text' | 'number' | 'select' | 'checkbox' | 'textarea' | 'file'
+  required: boolean
   options?: string[]
-  required?: boolean
-  visibleToVolunteers?: boolean
-  context?: 'note' | 'report' | 'both'
+  validation?: { minLength?: number; maxLength?: number; min?: number; max?: number }
+  visibleToVolunteers: boolean
+  editableByVolunteers: boolean
+  context: CustomFieldContext
+  order: number
+  createdAt: string
+}
+
+/** Check if a custom field matches a given context */
+export function fieldMatchesContext(
+  field: CustomFieldDefinition,
+  context: CustomFieldContext,
+): boolean {
+  return field.context === context || field.context === 'all'
 }
 
 /** User role in the hub */
@@ -107,7 +123,9 @@ export interface ShiftStatus {
 /** Encrypted note from the API */
 export interface EncryptedNote {
   id: string
-  callId: string
+  callId?: string
+  conversationId?: string
+  contactHash?: string
   authorPubkey: string
   createdAt: string
   updatedAt: string
@@ -115,6 +133,7 @@ export interface EncryptedNote {
   authorEnvelope?: KeyEnvelope
   adminEnvelopes?: RecipientKeyEnvelope[]
   ephemeralPubkey?: string
+  replyCount?: number
 }
 
 /** Volunteer info */
@@ -166,8 +185,15 @@ export interface Conversation {
   status: 'waiting' | 'active' | 'closed'
   assignedTo?: string
   contactIdentifier: string
+  contactHash?: string
   lastMessageAt?: string
+  messageCount?: number
   createdAt: string
+  metadata?: {
+    type?: string
+    reportTitle?: string
+    reportCategory?: string
+  }
 }
 
 /** Conversation message */
@@ -175,11 +201,30 @@ export interface ConversationMessage {
   id: string
   conversationId: string
   direction: 'inbound' | 'outbound'
+  authorPubkey: string
   encryptedContent: string
-  authorEnvelope?: KeyEnvelope
-  adminEnvelopes?: RecipientKeyEnvelope[]
-  createdAt: string
+  readerEnvelopes: RecipientKeyEnvelope[]
+  hasAttachments: boolean
+  attachmentIds?: string[]
   status?: string
+  deliveredAt?: string
+  readAt?: string
+  failureReason?: string
+  retryCount?: number
+  createdAt: string
+  externalId?: string
+}
+
+/** Contact summary for contacts list */
+export interface ContactSummary {
+  contactHash: string
+  last4?: string
+  firstSeen: string
+  lastSeen: string
+  callCount: number
+  conversationCount: number
+  noteCount: number
+  reportCount: number
 }
 
 // --- Settings Types ---

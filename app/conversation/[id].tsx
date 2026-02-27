@@ -53,13 +53,13 @@ export default function ConversationThreadScreen() {
       const pk = keyManager.getPublicKeyHex()
       if (!pk) throw new Error('No public key')
 
-      // Encrypt for self (and admin would be added server-side)
+      // Encrypt for self (admin envelopes added server-side)
       const encrypted = encryptMessage(messageText.trim(), [pk])
 
       await apiClient.api.post(`/api/conversations/${id}/messages`, {
         encryptedContent: encrypted.encryptedContent,
         readerEnvelopes: encrypted.readerEnvelopes,
-        plaintextForSending: messageText.trim(), // Server forwards to channel
+        plaintextForSending: messageText.trim(),
       })
 
       setMessageText('')
