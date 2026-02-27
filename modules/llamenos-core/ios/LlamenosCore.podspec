@@ -40,11 +40,15 @@ Pod::Spec.new do |s|
     'OTHER_SWIFT_FLAGS' => '$(inherited) -Xcc -fmodule-map-file=$(PODS_ROOT)/../../modules/llamenos-core/ios/LlamenosCoreFFI.modulemap',
     'HEADER_SEARCH_PATHS' => '$(inherited) $(PODS_ROOT)/../../modules/llamenos-core/ios',
     'EXCLUDED_ARCHS[sdk=iphonesimulator*]' => 'x86_64',
-    # Force-load the Rust static archive inside the vendored framework.
-    # The framework binary is a renamed .a file; the linker won't extract
-    # C/Rust FFI symbols from it via -framework alone. Without -force_load,
-    # UniFFI symbols (_uniffi_llamenos_core_*) are undefined at link time.
-    'OTHER_LDFLAGS' => '$(inherited) -force_load $(PODS_XCFRAMEWORKS_BUILD_DIR)/LlamenosCore/LlamenosCoreFFI.framework/LlamenosCoreFFI',
+    # Force-load the Rust static archive from the source XCFramework.
+    # The XCFramework wraps a static .a inside .framework bundles. The linker
+    # won't extract C/Rust FFI symbols via -framework alone. We reference the
+    # SOURCE XCFramework path (not XCFrameworkIntermediates) so the file exists
+    # at Xcode build-planning time, avoiding "Build input file cannot be found".
+    # LLCP_XCFRAMEWORK_SLICE selects the correct platform slice via SDK condition.
+    'LLCP_XCFRAMEWORK_SLICE' => 'ios-arm64',
+    'LLCP_XCFRAMEWORK_SLICE[sdk=iphonesimulator*]' => 'ios-arm64-simulator',
+    'OTHER_LDFLAGS' => '$(inherited) -force_load $(PODS_ROOT)/../../modules/llamenos-core/ios/LlamenosCoreFFI.xcframework/$(LLCP_XCFRAMEWORK_SLICE)/LlamenosCoreFFI.framework/LlamenosCoreFFI',
   }
 
   s.dependency 'ExpoModulesCore'
