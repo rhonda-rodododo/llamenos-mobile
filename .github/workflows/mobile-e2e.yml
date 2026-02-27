@@ -28,7 +28,7 @@ permissions:
 
 jobs:
   ios:
-    runs-on: macos-14
+    runs-on: macos-15
     name: E2E (iOS Simulator)
     timeout-minutes: 45
 
@@ -71,9 +71,11 @@ jobs:
       - name: Boot iOS simulator
         run: |
           DEVICE_ID=$(xcrun simctl list devices available -j | \
-            python3 -c "import json,sys; devs=json.load(sys.stdin)['devices']; iphones=[d for v in devs.values() for d in v if 'iPhone 15' in d['name'] and d['isAvailable']]; print(iphones[0]['udid'] if iphones else '')")
+            python3 -c "import json,sys; devs=json.load(sys.stdin)['devices']; iphones=[d for v in devs.values() for d in v if 'iPhone 16' in d['name'] and d['isAvailable']]; print(iphones[0]['udid'] if iphones else '')")
           if [ -z "$DEVICE_ID" ]; then
-            DEVICE_ID=$(xcrun simctl create "iPhone 15" "com.apple.CoreSimulator.SimDeviceType.iPhone-15" "com.apple.CoreSimulator.SimRuntime.iOS-17-5")
+            # Find the latest available iOS runtime
+            RUNTIME=$(xcrun simctl list runtimes -j | python3 -c "import json,sys; rts=json.load(sys.stdin)['runtimes']; ios=[r for r in rts if r['platform']=='iOS' and r['isAvailable']]; print(ios[-1]['identifier'] if ios else '')")
+            DEVICE_ID=$(xcrun simctl create "iPhone 16" "com.apple.CoreSimulator.SimDeviceType.iPhone-16" "$RUNTIME")
           fi
           xcrun simctl boot "$DEVICE_ID" 2>/dev/null || true
 

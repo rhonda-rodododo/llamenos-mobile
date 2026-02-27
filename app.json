@@ -71,7 +71,8 @@
           "androidCollapsedTitle": "#{unread_notifications} new notifications"
         }
       ],
-      "expo-font"
+      "expo-font",
+      "./modules/llamenos-sip/app.plugin.js"
     ]
   }
 }
