@@ -98,7 +98,7 @@ export default function OnboardingScreen() {
       {/* Step 1: Generate */}
       {step === 'generate' && (
         <View className="w-full max-w-sm items-center gap-6">
-          <Text className="text-2xl font-bold text-foreground">
+          <Text className="text-2xl font-bold text-foreground" accessibilityRole="header">
             {t('onboarding.title', 'Create Your Identity')}
           </Text>
           <Text className="text-center text-base text-muted-foreground">
@@ -107,6 +107,8 @@ export default function OnboardingScreen() {
           <Pressable
             className="w-full rounded-lg bg-primary px-6 py-4"
             onPress={handleGenerate}
+            accessibilityLabel={t('onboarding.generate', 'Generate Keypair')}
+            accessibilityRole="button"
             testID="onboarding-generate-btn"
           >
             <Text className="text-center text-lg font-semibold text-primary-foreground">
@@ -119,11 +121,14 @@ export default function OnboardingScreen() {
       {/* Step 2: Backup nsec */}
       {step === 'backup' && nsec && (
         <View className="w-full max-w-sm gap-6">
-          <Text className="text-2xl font-bold text-foreground">
+          <Text className="text-2xl font-bold text-foreground" accessibilityRole="header">
             {t('onboarding.backupTitle', 'Back Up Your Key')}
           </Text>
 
-          <View className="rounded-lg border border-destructive/30 bg-destructive/5 p-4">
+          <View
+            className="rounded-lg border border-destructive/30 bg-destructive/5 p-4"
+            accessibilityRole="alert"
+          >
             <Text className="mb-2 text-sm font-semibold text-destructive">
               {t('onboarding.warning', 'Save this key somewhere safe. If you lose it, your identity cannot be recovered.')}
             </Text>
@@ -134,7 +139,11 @@ export default function OnboardingScreen() {
               {t('onboarding.secretKey', 'Secret Key (nsec)')}
             </Text>
             <View className="rounded-lg border border-border bg-card p-3" testID="onboarding-nsec-display">
-              <Text className="font-mono text-xs text-foreground" selectable>
+              <Text
+                className="font-mono text-xs text-foreground"
+                selectable
+                accessibilityLabel={t('a11y.nsecValue', 'Your secret key value')}
+              >
                 {nsec}
               </Text>
             </View>
@@ -146,7 +155,11 @@ export default function OnboardingScreen() {
                 {t('onboarding.publicKey', 'Public Key (npub)')}
               </Text>
               <View className="rounded-lg border border-border bg-card p-3">
-                <Text className="font-mono text-xs text-muted-foreground" selectable>
+                <Text
+                  className="font-mono text-xs text-muted-foreground"
+                  selectable
+                  accessibilityLabel={t('a11y.npubValue', 'Your public key value')}
+                >
                   {npub}
                 </Text>
               </View>
@@ -156,6 +169,13 @@ export default function OnboardingScreen() {
           <Pressable
             className="rounded-lg border border-border bg-card px-4 py-3"
             onPress={handleCopyNsec}
+            accessibilityLabel={
+              copied
+                ? t('onboarding.copied', 'Copied!')
+                : t('onboarding.copy', 'Copy Secret Key')
+            }
+            accessibilityRole="button"
+            accessibilityHint={t('a11y.copyNsecHint', 'Copies the secret key to your clipboard')}
             testID="onboarding-copy-btn"
           >
             <Text className="text-center font-medium text-foreground">
@@ -168,6 +188,8 @@ export default function OnboardingScreen() {
           <Pressable
             className="rounded-lg bg-primary px-4 py-3"
             onPress={handleBackupConfirm}
+            accessibilityLabel={t('onboarding.continue', "I've saved my key")}
+            accessibilityRole="button"
             testID="onboarding-confirm-backup-btn"
           >
             <Text className="text-center font-semibold text-primary-foreground">
@@ -180,7 +202,7 @@ export default function OnboardingScreen() {
       {/* Step 3: Set PIN */}
       {step === 'pin' && (
         <View className="items-center gap-6">
-          <Text className="text-2xl font-bold text-foreground">
+          <Text className="text-2xl font-bold text-foreground" accessibilityRole="header">
             {t('onboarding.setPinTitle', 'Set a PIN')}
           </Text>
           <Text className="text-center text-base text-muted-foreground">
@@ -197,7 +219,7 @@ export default function OnboardingScreen() {
       {/* Step 4: Confirm PIN */}
       {step === 'confirm' && (
         <View className="items-center gap-6">
-          <Text className="text-2xl font-bold text-foreground">
+          <Text className="text-2xl font-bold text-foreground" accessibilityRole="header">
             {t('onboarding.confirmPinTitle', 'Confirm PIN')}
           </Text>
           <Text className="text-center text-base text-muted-foreground">
@@ -208,7 +230,12 @@ export default function OnboardingScreen() {
             error={pinError}
             disabled={loading}
           />
-          <Pressable onPress={() => { setStep('pin'); setPin(null); setPinError(null) }}>
+          <Pressable
+            onPress={() => { setStep('pin'); setPin(null); setPinError(null) }}
+            accessibilityLabel={t('onboarding.changePin', 'Change PIN')}
+            accessibilityRole="button"
+            accessibilityHint={t('a11y.changePinHint', 'Go back and enter a different PIN')}
+          >
             <Text className="text-sm text-muted-foreground">
               {t('onboarding.changePin', 'Change PIN')}
             </Text>

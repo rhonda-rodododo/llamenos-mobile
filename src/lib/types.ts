@@ -181,3 +181,64 @@ export interface ConversationMessage {
   createdAt: string
   status?: string
 }
+
+// --- Settings Types ---
+
+/** Telephony provider configuration */
+export interface TelephonySettings {
+  type: string
+  accountSid?: string
+  authToken?: string
+  apiKeySid?: string
+  apiKeySecret?: string
+  twimlAppSid?: string
+  phoneNumber?: string
+  signalwireSpace?: string
+  apiKey?: string
+  apiSecret?: string
+  applicationId?: string
+  privateKey?: string
+  authId?: string
+  ariUrl?: string
+  ariUsername?: string
+  ariPassword?: string
+  bridgeCallbackUrl?: string
+  enableWebrtc?: boolean
+}
+
+/** Spam protection settings */
+export interface SpamSettings {
+  captchaEnabled: boolean
+  rateLimitEnabled: boolean
+  rateLimit: number           // calls per minute
+  banDurationMinutes: number
+  autoBlockThreshold: number
+}
+
+/** Call routing and voicemail settings */
+export interface CallSettings {
+  queueTimeoutSeconds: number
+  voicemailEnabled: boolean
+  maxVoicemailSeconds: number
+  recordingEnabled: boolean
+}
+
+/** Combined hub settings */
+export interface HubSettings {
+  telephony: TelephonySettings
+  spam: SpamSettings
+  calls: CallSettings
+}
+
+/** Role definition (PBAC) */
+export interface Role {
+  id: string
+  name: string
+  slug: string
+  permissions: string[]
+  isDefault: boolean
+  isSystem: boolean
+  description: string
+  createdAt: string
+  updatedAt: string
+}

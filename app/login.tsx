@@ -120,7 +120,10 @@ export default function LoginScreen() {
     >
       <View className="flex-1 items-center justify-center px-6">
         {/* Hub name / connection */}
-        <Text className="mb-2 text-3xl font-bold text-foreground">
+        <Text
+          className="mb-2 text-3xl font-bold text-foreground"
+          accessibilityRole="header"
+        >
           {hubName ?? t('app.name', 'Hotline')}
         </Text>
         <Text className="mb-8 text-base text-muted-foreground">
@@ -141,12 +144,17 @@ export default function LoginScreen() {
               autoCapitalize="none"
               autoCorrect={false}
               keyboardType="url"
+              accessibilityLabel={t('auth.hubUrl', 'Hub URL')}
+              accessibilityHint={t('a11y.hubUrlHint', 'Enter the URL of your crisis hub server')}
               testID="login-hub-url-input"
             />
             <Pressable
               className="rounded-lg bg-primary px-4 py-3"
               onPress={handleHubConnect}
               disabled={loading}
+              accessibilityLabel={t('auth.connect', 'Connect')}
+              accessibilityRole="button"
+              accessibilityState={{ disabled: loading }}
               testID="login-connect-btn"
             >
               <Text className="text-center font-semibold text-primary-foreground">
@@ -159,7 +167,7 @@ export default function LoginScreen() {
         {/* PIN unlock (returning user) */}
         {hubUrl && hasKey && !showImport && (
           <View className="items-center gap-6">
-            <Text className="text-lg text-foreground">
+            <Text className="text-lg text-foreground" accessibilityRole="header">
               {t('auth.enterPin', 'Enter your PIN')}
             </Text>
             <PinInput
@@ -167,7 +175,12 @@ export default function LoginScreen() {
               error={pinError}
               disabled={loading}
             />
-            <Pressable onPress={() => setShowImport(true)}>
+            <Pressable
+              onPress={() => setShowImport(true)}
+              accessibilityLabel={t('auth.importKey', 'Import a different key')}
+              accessibilityRole="button"
+              accessibilityHint={t('a11y.importKeyHint', 'Switch to importing a different nsec key')}
+            >
               <Text className="text-sm text-primary">
                 {t('auth.importKey', 'Import a different key')}
               </Text>
@@ -178,7 +191,7 @@ export default function LoginScreen() {
         {/* Import nsec (new user or switching keys) */}
         {hubUrl && (!hasKey || showImport) && (
           <View className="w-full max-w-sm gap-4">
-            <Text className="text-lg font-medium text-foreground">
+            <Text className="text-lg font-medium text-foreground" accessibilityRole="header">
               {t('auth.importTitle', 'Import Your Key')}
             </Text>
             <TextInput
@@ -190,12 +203,17 @@ export default function LoginScreen() {
               autoCorrect={false}
               secureTextEntry
               multiline
+              accessibilityLabel={t('auth.nsecInput', 'Secret key')}
+              accessibilityHint={t('a11y.nsecInputHint', 'Paste your nsec private key here')}
               testID="login-nsec-input"
             />
             <Pressable
               className="rounded-lg bg-primary px-4 py-3"
               onPress={handleImportNsec}
               disabled={loading}
+              accessibilityLabel={t('auth.import', 'Import & Set PIN')}
+              accessibilityRole="button"
+              accessibilityState={{ disabled: loading }}
               testID="login-import-btn"
             >
               <Text className="text-center font-semibold text-primary-foreground">
@@ -203,14 +221,24 @@ export default function LoginScreen() {
               </Text>
             </Pressable>
 
-            <Pressable onPress={() => router.push('/onboarding')} testID="login-generate-btn">
+            <Pressable
+              onPress={() => router.push('/onboarding')}
+              accessibilityLabel={t('auth.generateNew', 'Generate a new keypair')}
+              accessibilityRole="button"
+              accessibilityHint={t('a11y.generateHint', 'Creates a new cryptographic identity')}
+              testID="login-generate-btn"
+            >
               <Text className="text-center text-sm text-primary">
                 {t('auth.generateNew', 'Generate a new keypair')}
               </Text>
             </Pressable>
 
             {hasKey && showImport && (
-              <Pressable onPress={() => setShowImport(false)}>
+              <Pressable
+                onPress={() => setShowImport(false)}
+                accessibilityLabel={t('auth.backToPin', 'Back to PIN unlock')}
+                accessibilityRole="button"
+              >
                 <Text className="text-center text-sm text-muted-foreground">
                   {t('auth.backToPin', 'Back to PIN unlock')}
                 </Text>

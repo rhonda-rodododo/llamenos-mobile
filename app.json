@@ -17,7 +17,12 @@
       "bundleIdentifier": "net.riseup.llamenos",
       "infoPlist": {
         "NSMicrophoneUsageDescription": "Llamenos needs microphone access to answer crisis calls via VoIP.",
-        "UIBackgroundModes": ["voip", "audio", "fetch", "remote-notification"]
+        "UIBackgroundModes": ["voip", "audio", "fetch", "remote-notification"],
+        "CFBundleURLTypes": [
+          {
+            "CFBundleURLSchemes": ["llamenos"]
+          }
+        ]
       }
     },
     "android": {
@@ -39,6 +44,16 @@
         "USE_FULL_SCREEN_INTENT",
         "MANAGE_OWN_CALLS",
         "VIBRATE"
+      ],
+      "intentFilters": [
+        {
+          "action": "VIEW",
+          "autoVerify": true,
+          "data": [
+            { "scheme": "llamenos", "host": "*" }
+          ],
+          "category": ["BROWSABLE", "DEFAULT"]
+        }
       ]
     },
     "web": {

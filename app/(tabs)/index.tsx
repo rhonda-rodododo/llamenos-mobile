@@ -12,6 +12,7 @@ import { useAuthStore, useHubConfigStore } from '@/lib/store'
 import { useCalls, useShiftStatus, usePresence } from '@/lib/hooks'
 import { CallCard } from '@/components/CallCard'
 import { RelayStatus } from '@/components/RelayStatus'
+import { DashboardSkeleton } from '@/components/Skeleton'
 import { colors } from '@/lib/theme'
 import { haptic } from '@/lib/haptics'
 import * as apiClient from '@/lib/api-client'
@@ -64,6 +65,14 @@ export default function DashboardScreen() {
       setOnBreak(!newBreak)
     }
   }, [onBreak])
+
+  if (shiftLoading && !refreshing) {
+    return (
+      <View className="flex-1 bg-background" testID="dashboard-loading">
+        <DashboardSkeleton />
+      </View>
+    )
+  }
 
   return (
     <ScrollView

@@ -43,6 +43,14 @@ yarn-error.*
 *.a
 *.xcframework/
 
+# Downloaded/built native libs for llamenos-core module
+modules/llamenos-core/.core-version
+modules/llamenos-core/android/src/main/jniLibs/
+modules/llamenos-core/ios/LlamenosCore.xcframework/
+modules/llamenos-core/ios/LlamenosCoreFFI.h
+modules/llamenos-core/ios/LlamenosCoreFFI.modulemap
+modules/llamenos-core/ios/LlamenosCore.swift
+
 # IDE
 .idea/
 .vscode/

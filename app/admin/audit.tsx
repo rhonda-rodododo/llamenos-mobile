@@ -5,7 +5,11 @@
 import { useState, useCallback } from 'react'
 import { View, Text, FlatList, Pressable, ScrollView, RefreshControl, ActivityIndicator } from 'react-native'
 import { useTranslation } from 'react-i18next'
+import { useColorScheme } from 'nativewind'
 import { useQuery } from '@tanstack/react-query'
+import { ListSkeleton, AuditEntrySkeleton } from '@/components/Skeleton'
+import { colors } from '@/lib/theme'
+import { haptic } from '@/lib/haptics'
 import * as apiClient from '@/lib/api-client'
 
 const EVENT_FILTERS = ['all', 'authentication', 'volunteers', 'calls', 'settings', 'shifts', 'notes'] as const
@@ -32,8 +36,10 @@ function getEventCategory(event: string): string {
 
 export default function AuditScreen() {
   const { t } = useTranslation()
+  const { colorScheme } = useColorScheme()
   const [filter, setFilter] = useState<EventFilter>('all')
   const [page, setPage] = useState(1)
+  const scheme = colorScheme === 'dark' ? 'dark' : 'light'
 
   const { data, isLoading, isFetching, refetch } = useQuery({
     queryKey: ['audit', filter, page],
@@ -117,8 +123,8 @@ export default function AuditScreen() {
         }}
         ListEmptyComponent={
           isLoading ? (
-            <View className="items-center py-12">
-              <ActivityIndicator size="large" />
+            <View className="py-4">
+              <ListSkeleton count={6} Card={AuditEntrySkeleton} />
             </View>
           ) : (
             <View className="items-center py-12">
@@ -129,7 +135,11 @@ export default function AuditScreen() {
           )
         }
         refreshControl={
-          <RefreshControl refreshing={isFetching && page === 1} onRefresh={() => { setPage(1); refetch() }} />
+          <RefreshControl
+            refreshing={isFetching && page === 1}
+            onRefresh={() => { haptic.light(); setPage(1); refetch() }}
+            tintColor={colors[scheme].primary}
+          />
         }
         onEndReached={loadMore}
         onEndReachedThreshold={0.5}

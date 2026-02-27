@@ -5,15 +5,20 @@
 import { useState, useCallback } from 'react'
 import { View, Text, FlatList, Pressable, Alert, TextInput, RefreshControl } from 'react-native'
 import { useTranslation } from 'react-i18next'
+import { useColorScheme } from 'nativewind'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { usePermission } from '@/hooks/usePermission'
+import { colors } from '@/lib/theme'
+import { haptic } from '@/lib/haptics'
 import * as apiClient from '@/lib/api-client'
 
 export default function BansScreen() {
   const { t } = useTranslation()
+  const { colorScheme } = useColorScheme()
   const queryClient = useQueryClient()
   const canCreate = usePermission('bans:create')
   const canDelete = usePermission('bans:delete')
+  const scheme = colorScheme === 'dark' ? 'dark' : 'light'
 
   const [showAddForm, setShowAddForm] = useState(false)
   const [phone, setPhone] = useState('')
@@ -137,7 +142,11 @@ export default function BansScreen() {
           </View>
         }
         refreshControl={
-          <RefreshControl refreshing={isLoading} onRefresh={() => refetch()} />
+          <RefreshControl
+            refreshing={isLoading}
+            onRefresh={() => { haptic.light(); refetch() }}
+            tintColor={colors[scheme].primary}
+          />
         }
       />
     </View>

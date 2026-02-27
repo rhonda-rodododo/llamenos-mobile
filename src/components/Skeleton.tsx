@@ -93,6 +93,81 @@ export function ShiftCardSkeleton() {
   )
 }
 
+/** Dashboard skeleton — shift card + stat cards + empty call area */
+export function DashboardSkeleton() {
+  return (
+    <Animated.View className="gap-4 px-4 py-4">
+      {/* Header */}
+      <Animated.View className="flex-row items-center justify-between">
+        <Skeleton width="50%" height={28} />
+        <Skeleton width={24} height={24} className="rounded-full" />
+      </Animated.View>
+
+      {/* Shift status card */}
+      <Animated.View className="rounded-xl border border-border bg-card p-4 gap-2">
+        <Skeleton width="40%" height={12} />
+        <Skeleton width="60%" height={18} />
+        <Skeleton width="50%" height={10} />
+      </Animated.View>
+
+      {/* Stats row */}
+      <Animated.View className="flex-row gap-3">
+        <Animated.View className="flex-1 rounded-xl border border-border bg-card p-4 gap-2">
+          <Skeleton width="70%" height={12} />
+          <Skeleton width={40} height={28} />
+        </Animated.View>
+        <Animated.View className="flex-1 rounded-xl border border-border bg-card p-4 gap-2">
+          <Skeleton width="60%" height={12} />
+          <Skeleton width={60} height={28} />
+        </Animated.View>
+      </Animated.View>
+
+      {/* Empty call area */}
+      <Animated.View className="items-center py-8">
+        <Skeleton width="50%" height={14} />
+      </Animated.View>
+    </Animated.View>
+  )
+}
+
+/**
+ * Configurable skeleton loader — renders a combination of avatar, header, and text lines.
+ * Useful as a generic loading placeholder for any screen section.
+ */
+export function SkeletonLoader({
+  lines = 3,
+  header = false,
+  avatar = false,
+}: {
+  lines?: number
+  header?: boolean
+  avatar?: boolean
+}) {
+  const lineWidths = ['100%', '85%', '70%', '90%', '60%', '80%', '75%', '95%'] as const
+
+  return (
+    <Animated.View
+      className="gap-3 rounded-xl border border-border bg-card p-4"
+      accessibilityLabel="Loading"
+      accessibilityRole="progressbar"
+    >
+      <Animated.View className="flex-row items-center gap-3">
+        {avatar && <Skeleton width={44} height={44} className="rounded-full" />}
+        <Animated.View className="flex-1 gap-2">
+          {header && <Skeleton width="55%" height={18} />}
+          {Array.from({ length: lines }, (_, i) => (
+            <Skeleton
+              key={i}
+              width={lineWidths[i % lineWidths.length]}
+              height={12}
+            />
+          ))}
+        </Animated.View>
+      </Animated.View>
+    </Animated.View>
+  )
+}
+
 /** Generic list skeleton — repeats a skeleton card N times */
 export function ListSkeleton({ count = 5, Card = NoteCardSkeleton }: { count?: number; Card?: React.ComponentType }) {
   return (

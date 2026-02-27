@@ -20,6 +20,10 @@ import type {
   Conversation,
   ConversationMessage,
   CustomFieldDefinition,
+  TelephonySettings,
+  SpamSettings,
+  CallSettings,
+  Role,
 } from './types'
 
 export class ApiError extends Error {
@@ -32,10 +36,24 @@ export class ApiError extends Error {
   }
 }
 
+/**
+ * Enforce HTTPS in production to prevent MITM attacks.
+ * Only HTTP is allowed for local development (localhost/10.0.x.x).
+ */
+function enforceSecureTransport(url: string): void {
+  const parsed = new URL(url)
+  if (parsed.protocol === 'https:') return
+  if (parsed.hostname === 'localhost' || parsed.hostname === '127.0.0.1') return
+  if (parsed.hostname.startsWith('10.0.') || parsed.hostname.startsWith('192.168.')) return
+  if (__DEV__) return // Allow HTTP in dev builds
+  throw new Error(`Insecure transport rejected: ${parsed.protocol}// — use HTTPS`)
+}
+
 class ApiClient {
   get baseUrl(): string {
     const url = useHubConfigStore.getState().hubUrl
     if (!url) throw new Error('Hub URL not configured')
+    enforceSecureTransport(url)
     return url
   }
 
@@ -248,4 +266,89 @@ export function listConversations() {
 
 export function getConversationMessages(conversationId: string) {
   return api.get<{ messages: ConversationMessage[] }>(`/api/conversations/${conversationId}/messages`)
+}
+
+// --- Admin: Settings ---
+
+export function getTelephonySettings() {
+  return api.get<TelephonySettings>('/api/settings/telephony-provider')
+}
+
+export function updateTelephonySettings(data: Partial<TelephonySettings>) {
+  return api.request<{ success: boolean }>('PATCH', '/api/settings/telephony-provider', data)
+}
+
+export function testTelephonyConnection(data: Partial<TelephonySettings>) {
+  return api.post<{ ok: boolean; error?: string }>('/api/settings/telephony-provider/test', data)
+}
+
+export function getSpamSettings() {
+  return api.get<SpamSettings>('/api/settings/spam')
+}
+
+export function updateSpamSettings(data: Partial<SpamSettings>) {
+  return api.request<{ success: boolean }>('PATCH', '/api/settings/spam', data)
+}
+
+export function getCallSettings() {
+  return api.get<CallSettings>('/api/settings/call')
+}
+
+export function updateCallSettings(data: Partial<CallSettings>) {
+  return api.request<{ success: boolean }>('PATCH', '/api/settings/call', data)
+}
+
+// --- Admin: Custom Fields ---
+
+export function listCustomFields() {
+  return api.get<{ fields: CustomFieldDefinition[] }>('/api/settings/custom-fields')
+}
+
+export function updateCustomFields(fields: CustomFieldDefinition[]) {
+  return api.put<{ success: boolean }>('/api/settings/custom-fields', { fields })
+}
+
+// --- Admin: Roles ---
+
+export function listRoles() {
+  return api.get<{ roles: Role[] }>('/api/settings/roles')
+}
+
+export function createRole(role: { name: string; description?: string; permissions: string[] }) {
+  return api.post<Role>('/api/settings/roles', role)
+}
+
+export function updateRole(id: string, role: Partial<Role>) {
+  return api.request<{ success: boolean }>('PATCH', `/api/settings/roles/${id}`, role)
+}
+
+export function deleteRole(id: string) {
+  return api.delete<{ success: boolean }>(`/api/settings/roles/${id}`)
+}
+
+export function getPermissionsCatalog() {
+  return api.get<{
+    permissions: Record<string, string>
+    byDomain: Record<string, Array<{ key: string; label: string }>>
+  }>('/api/settings/permissions')
+}
+
+// --- Admin: Volunteers (additional) ---
+
+export function addVolunteer(data: { pubkey: string; name: string; phone?: string; roleIds?: string[] }) {
+  return api.post<{ success: boolean }>('/api/volunteers', data)
+}
+
+export function deleteVolunteer(pubkey: string) {
+  return api.delete<{ success: boolean }>(`/api/volunteers/${pubkey}`)
+}
+
+// --- Admin: Invites ---
+
+export function createInvite(data: { name: string; phone?: string; roleIds?: string[] }) {
+  return api.post<{ code: string; url: string }>('/api/invites', data)
+}
+
+export function listInvites() {
+  return api.get<{ invites: Array<{ code: string; name: string; createdAt: string; expiresAt: string; redeemed: boolean }> }>('/api/invites')
 }

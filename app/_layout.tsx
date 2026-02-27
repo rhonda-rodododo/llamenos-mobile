@@ -9,7 +9,7 @@ import '../global.css'
 import '@/lib/i18n'
 
 import { useEffect, useState } from 'react'
-import { View, useColorScheme as useSystemColorScheme, AccessibilityInfo } from 'react-native'
+import { View, Keyboard, Pressable, useColorScheme as useSystemColorScheme, AccessibilityInfo } from 'react-native'
 import { Stack, SplashScreen } from 'expo-router'
 import { StatusBar } from 'expo-status-bar'
 import { useFonts } from 'expo-font'
@@ -99,6 +99,20 @@ function useReducedMotion() {
     const sub = AccessibilityInfo.addEventListener('reduceMotionChanged', setReduceMotion)
     return () => sub.remove()
   }, [setReduceMotion])
+}
+
+// --- Keyboard dismiss on tap outside inputs ---
+
+function KeyboardDismissWrapper({ children }: { children: React.ReactNode }) {
+  return (
+    <Pressable
+      style={{ flex: 1 }}
+      onPress={Keyboard.dismiss}
+      accessible={false}
+    >
+      {children}
+    </Pressable>
+  )
 }
 
 // --- Providers ---
@@ -202,28 +216,30 @@ export default function RootLayout() {
         <StatusBar style={resolved === 'dark' ? 'light' : 'dark'} />
         <OfflineBanner />
         <ScreenErrorBoundary>
-          <Stack screenOptions={{ headerShown: false }}>
-            <Stack.Screen name="index" />
-            <Stack.Screen name="login" />
-            <Stack.Screen
-              name="onboarding"
-              options={{ presentation: 'modal', gestureEnabled: false }}
-            />
-            <Stack.Screen name="(tabs)" />
-            <Stack.Screen
-              name="note/[id]"
-              options={{ headerShown: true, title: 'Note' }}
-            />
-            <Stack.Screen
-              name="call/[id]"
-              options={{ headerShown: true, title: 'Call', gestureEnabled: false }}
-            />
-            <Stack.Screen
-              name="conversation/[id]"
-              options={{ headerShown: true, title: 'Conversation' }}
-            />
-            <Stack.Screen name="admin" options={{ headerShown: false }} />
-          </Stack>
+          <KeyboardDismissWrapper>
+            <Stack screenOptions={{ headerShown: false }}>
+              <Stack.Screen name="index" />
+              <Stack.Screen name="login" />
+              <Stack.Screen
+                name="onboarding"
+                options={{ presentation: 'modal', gestureEnabled: false }}
+              />
+              <Stack.Screen name="(tabs)" />
+              <Stack.Screen
+                name="note/[id]"
+                options={{ headerShown: true, title: 'Note' }}
+              />
+              <Stack.Screen
+                name="call/[id]"
+                options={{ headerShown: true, title: 'Call', gestureEnabled: false }}
+              />
+              <Stack.Screen
+                name="conversation/[id]"
+                options={{ headerShown: true, title: 'Conversation' }}
+              />
+              <Stack.Screen name="admin" options={{ headerShown: false }} />
+            </Stack>
+          </KeyboardDismissWrapper>
         </ScreenErrorBoundary>
         <Toast config={toastConfig} />
       </AppProviders>
