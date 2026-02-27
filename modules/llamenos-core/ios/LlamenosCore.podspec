@@ -25,13 +25,21 @@ Pod::Spec.new do |s|
   # CocoaPods sets up framework search paths for linking but not for
   # the pod's own Swift compilation. We use -fmodule-map-file to make
   # the standalone modulemap discoverable.
+  #
+  # EXCLUDED_ARCHS: The XCFramework only contains arm64 slices (device +
+  # simulator). CocoaPods overrides ONLY_ACTIVE_ARCH to NO for pod targets,
+  # causing x86_64 to be built even on Apple Silicon runners. Without this
+  # exclusion, [CP] Copy XCFrameworks fails to find a matching slice and
+  # the linker reports "framework not found".
   s.pod_target_xcconfig = {
     'OTHER_SWIFT_FLAGS' => '-Xcc -fmodule-map-file=$(PODS_TARGET_SRCROOT)/LlamenosCoreFFI.modulemap',
     'HEADER_SEARCH_PATHS' => '$(PODS_TARGET_SRCROOT)',
+    'EXCLUDED_ARCHS[sdk=iphonesimulator*]' => 'x86_64',
   }
   s.user_target_xcconfig = {
     'OTHER_SWIFT_FLAGS' => '$(inherited) -Xcc -fmodule-map-file=$(PODS_ROOT)/../../modules/llamenos-core/ios/LlamenosCoreFFI.modulemap',
     'HEADER_SEARCH_PATHS' => '$(inherited) $(PODS_ROOT)/../../modules/llamenos-core/ios',
+    'EXCLUDED_ARCHS[sdk=iphonesimulator*]' => 'x86_64',
   }
 
   s.dependency 'ExpoModulesCore'
