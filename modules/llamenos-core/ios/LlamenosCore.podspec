@@ -17,6 +17,12 @@ Pod::Spec.new do |s|
   # Preserve the FFI header and modulemap for the Clang importer
   s.preserve_paths = 'LlamenosCoreFFI.h', 'LlamenosCoreFFI.modulemap'
 
+  # Make the modulemap discoverable so `import LlamenosCoreFFI` works in UniFFI bindings
+  s.pod_target_xcconfig = {
+    'SWIFT_INCLUDE_PATHS' => '$(PODS_TARGET_SRCROOT)',
+    'HEADER_SEARCH_PATHS' => '$(PODS_TARGET_SRCROOT)',
+  }
+
   s.dependency 'ExpoModulesCore'
 
   s.swift_version    = '5.9'

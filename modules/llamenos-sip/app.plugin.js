@@ -1,10 +1,15 @@
 /**
  * Expo config plugin for llamenos-sip.
  *
- * Adds the Linphone Maven repository to the root Android build.gradle
- * so Gradle can resolve org.linphone.no-video:linphone-sdk-android.
+ * 1. Adds the Linphone Maven repository to the root Android build.gradle
+ *    so Gradle can resolve org.linphone.no-video:linphone-sdk-android.
+ * 2. Adds packagingOptions to the app build.gradle to resolve libc++_shared.so
+ *    duplicate between React Native and Linphone SDK.
  */
-const { withProjectBuildGradle } = require('expo/config-plugins')
+const {
+  withProjectBuildGradle,
+  withAppBuildGradle,
+} = require('expo/config-plugins')
 
 const LINPHONE_MAVEN = `        maven {
             name = "linphone"
@@ -14,6 +19,14 @@ const LINPHONE_MAVEN = `        maven {
                 includeGroup("org.linphone.no-video")
             }
         }`
+
+const PACKAGING_OPTIONS = `
+    packagingOptions {
+        pickFirst 'lib/arm64-v8a/libc++_shared.so'
+        pickFirst 'lib/armeabi-v7a/libc++_shared.so'
+        pickFirst 'lib/x86_64/libc++_shared.so'
+        pickFirst 'lib/x86/libc++_shared.so'
+    }`
 
 function withLinphoneMaven(config) {
   return withProjectBuildGradle(config, (config) => {
@@ -31,4 +44,26 @@ function withLinphoneMaven(config) {
   })
 }
 
-module.exports = withLinphoneMaven
+function withPackagingOptions(config) {
+  return withAppBuildGradle(config, (config) => {
+    const contents = config.modResults.contents
+    // Only add if not already present
+    if (contents.includes("pickFirst 'lib/")) {
+      return config
+    }
+    // Insert packagingOptions inside the android { } block
+    config.modResults.contents = contents.replace(
+      /(android\s*\{)/,
+      `$1${PACKAGING_OPTIONS}`
+    )
+    return config
+  })
+}
+
+function withLlamenosSip(config) {
+  config = withLinphoneMaven(config)
+  config = withPackagingOptions(config)
+  return config
+}
+
+module.exports = withLlamenosSip
