@@ -1,5 +1,5 @@
 /**
- * Conversation thread view — E2EE messages with compose.
+ * Conversation thread view — E2EE messages with compose + conversation notes (Epic 127).
  */
 
 import { useState, useCallback, useRef } from 'react'
@@ -10,7 +10,7 @@ import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { useNostrSubscription } from '@/lib/nostr/hooks'
 import { KIND_MESSAGE_NEW } from '@/lib/nostr/event-kinds'
 import { MessageBubble } from '@/components/MessageBubble'
-import { ChannelBadge } from '@/components/ChannelBadge'
+import { NoteFormModal } from '@/components/NoteFormModal'
 import { useAuthStore, useHubConfigStore } from '@/lib/store'
 import { encryptMessage } from '@/lib/crypto'
 import * as keyManager from '@/lib/key-manager'
@@ -25,6 +25,7 @@ export default function ConversationThreadScreen() {
   const queryClient = useQueryClient()
   const [messageText, setMessageText] = useState('')
   const [sending, setSending] = useState(false)
+  const [noteModalVisible, setNoteModalVisible] = useState(false)
   const flatListRef = useRef<FlatList<ConversationMessage>>(null)
 
   const { data, isLoading } = useQuery({
@@ -77,6 +78,17 @@ export default function ConversationThreadScreen() {
         options={{
           headerShown: true,
           title: t('conversations.thread', 'Conversation'),
+          headerRight: () => (
+            <Pressable
+              onPress={() => setNoteModalVisible(true)}
+              hitSlop={12}
+              testID="conv-add-note-btn"
+            >
+              <Text className="text-sm font-medium text-primary">
+                {t('notes.addNote', 'Add Note')}
+              </Text>
+            </Pressable>
+          ),
         }}
       />
       <KeyboardAvoidingView
@@ -140,6 +152,13 @@ export default function ConversationThreadScreen() {
           </View>
         </View>
       </KeyboardAvoidingView>
+
+      <NoteFormModal
+        visible={noteModalVisible}
+        onClose={() => setNoteModalVisible(false)}
+        onSaved={() => queryClient.invalidateQueries({ queryKey: ['conversations', id] })}
+        conversationId={id}
+      />
     </>
   )
 }
