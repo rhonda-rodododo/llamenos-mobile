@@ -212,9 +212,6 @@ class LlamenosSipModule : Module() {
     c.mediaEncryption = MediaEncryption.SRTP
     c.isMediaEncryptionMandatory = true
 
-    // DNS
-    c.isDnsSetResolveEnabled = true
-
     // Add listener before starting
     c.addListener(coreListener)
 
@@ -313,7 +310,6 @@ class LlamenosSipModule : Module() {
         (first["username"] as? String)?.let { natPolicy?.stunServerUsername = it }
       }
 
-      natPolicy?.resolve()
       params.natPolicy = natPolicy
     }
 
