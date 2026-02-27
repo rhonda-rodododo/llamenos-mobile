@@ -20,9 +20,16 @@ Pod::Spec.new do |s|
   # Make the modulemap discoverable so `import LlamenosCoreFFI` works in UniFFI bindings.
   # Clang only auto-discovers module.modulemap, not LlamenosCoreFFI.modulemap,
   # so we pass the path explicitly via -fmodule-map-file.
+  # pod_target_xcconfig: applies to the LlamenosCore pod compile.
+  # user_target_xcconfig: propagates to consuming targets (ExpoModulesProvider, app)
+  #   that transitively depend on the LlamenosCoreFFI module.
   s.pod_target_xcconfig = {
     'OTHER_SWIFT_FLAGS' => '-Xcc -fmodule-map-file=$(PODS_TARGET_SRCROOT)/LlamenosCoreFFI.modulemap',
     'HEADER_SEARCH_PATHS' => '$(PODS_TARGET_SRCROOT)',
+  }
+  s.user_target_xcconfig = {
+    'OTHER_SWIFT_FLAGS' => '$(inherited) -Xcc -fmodule-map-file=$(PODS_ROOT)/../../modules/llamenos-core/ios/LlamenosCoreFFI.modulemap',
+    'HEADER_SEARCH_PATHS' => '$(inherited) $(PODS_ROOT)/../../modules/llamenos-core/ios',
   }
 
   s.dependency 'ExpoModulesCore'

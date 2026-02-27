@@ -56,7 +56,7 @@ module.exports = {
     },
     emulator: {
       type: 'android.emulator',
-      device: { avdName: 'Pixel_7_API_34' },
+      device: { avdName: 'test' },
     },
     'attached-android': {
       type: 'android.attached',
