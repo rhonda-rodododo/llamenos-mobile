@@ -15,6 +15,7 @@ on:
       - 'src/**'
       - 'app/**'
       - 'e2e/**'
+      - '__tests__/**'
       - '.detoxrc.js'
       - 'package.json'
       - 'bun.lock'
