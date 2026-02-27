@@ -25,14 +25,14 @@ module.exports = {
       binaryPath:
         'ios/build/Build/Products/Debug-iphonesimulator/Hotline.app',
       build:
-        'xcodebuild -workspace ios/Hotline.xcworkspace -scheme Hotline -configuration Debug -sdk iphonesimulator -derivedDataPath ios/build',
+        'xcodebuild -workspace ios/Hotline.xcworkspace -scheme Hotline -configuration Debug -sdk iphonesimulator -derivedDataPath ios/build ONLY_ACTIVE_ARCH=YES',
     },
     'ios.release': {
       type: 'ios.app',
       binaryPath:
         'ios/build/Build/Products/Release-iphonesimulator/Hotline.app',
       build:
-        'xcodebuild -workspace ios/Hotline.xcworkspace -scheme Hotline -configuration Release -sdk iphonesimulator -derivedDataPath ios/build',
+        'xcodebuild -workspace ios/Hotline.xcworkspace -scheme Hotline -configuration Release -sdk iphonesimulator -derivedDataPath ios/build ONLY_ACTIVE_ARCH=YES',
     },
     'android.debug': {
       type: 'android.apk',
