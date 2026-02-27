@@ -113,7 +113,20 @@
     "exportEncrypted": "Зашифрованный экспорт — расшифруйте ключом nsec",
     "viewNotes": "Заметки",
     "activeCallNote": "Заметка, прикреплённая к вашему активному звонку",
-    "draftSaved": "Черновик сохранён"
+    "draftSaved": "Черновик сохранён",
+    "addNote": "Добавить Заметку",
+    "placeholder": "Напишите заметку...",
+    "content": "Содержание Заметки",
+    "fields": "Пользовательские Поля",
+    "saved": "Заметка сохранена",
+    "reply": "Ответить",
+    "repliesCount": "{{count}} ответов",
+    "replyPlaceholder": "Написать ответ...",
+    "sendReply": "Отправить",
+    "threadLoading": "Загрузка обсуждения...",
+    "newConversationNote": "Новая Заметка Беседы",
+    "conversationNote": "Заметка беседы",
+    "linkedTo": "Связано с"
   },
   "transcription": {
     "title": "Транскрипция",
@@ -470,7 +483,12 @@
       "max": "Макс",
       "minLength": "Мин. длина",
       "maxLength": "Макс. длина"
-    }
+    },
+    "context": "Появляется В",
+    "callNotes": "Заметки Звонка",
+    "conversationNotes": "Заметки Беседы",
+    "reports": "Отчёты",
+    "allRecordTypes": "Все Типы"
   },
   "volunteerProfile": {
     "joined": "Присоединился",
@@ -661,5 +679,26 @@
     "title": "Message Preferences",
     "invalidToken": "Invalid or expired preferences link",
     "unsubscribe": "Unsubscribe from all messages"
+  },
+  "contacts": {
+    "title": "Контакты",
+    "description": "Просмотр единой истории взаимодействий по звонкам, беседам и отчётам.",
+    "contact": "Контакт",
+    "firstSeen": "Первое обращение",
+    "lastSeen": "Последнее обращение",
+    "call": "Звонок",
+    "conversation": "Беседа",
+    "messages": "сообщений",
+    "report": "Отчёт",
+    "noHistory": "История взаимодействий не найдена",
+    "noContacts": "Контакты не найдены"
+  },
+  "conversations": {
+    "title": "Беседы",
+    "thread": "Беседа",
+    "noMessages": "Сообщений пока нет",
+    "encrypted": "Сквозное шифрование",
+    "placeholder": "Введите сообщение...",
+    "send": "Отправить"
   }
 }

@@ -113,7 +113,20 @@
     "exportEncrypted": "암호화된 내보내기 — nsec 키로 복호화",
     "viewNotes": "메모",
     "activeCallNote": "활성 통화에 첨부된 메모",
-    "draftSaved": "임시 저장됨"
+    "draftSaved": "임시 저장됨",
+    "addNote": "메모 추가",
+    "placeholder": "메모를 작성하세요...",
+    "content": "메모 내용",
+    "fields": "사용자 정의 필드",
+    "saved": "메모가 저장되었습니다",
+    "reply": "답글",
+    "repliesCount": "{{count}}개의 답글",
+    "replyPlaceholder": "답글을 작성하세요...",
+    "sendReply": "보내기",
+    "threadLoading": "스레드 로딩 중...",
+    "newConversationNote": "새 대화 메모",
+    "conversationNote": "대화 메모",
+    "linkedTo": "연결됨"
   },
   "transcription": {
     "title": "전사",
@@ -470,7 +483,12 @@
       "max": "최대",
       "minLength": "최소 길이",
       "maxLength": "최대 길이"
-    }
+    },
+    "context": "표시 위치",
+    "callNotes": "통화 메모",
+    "conversationNotes": "대화 메모",
+    "reports": "보고서",
+    "allRecordTypes": "모든 유형"
   },
   "volunteerProfile": {
     "joined": "가입일",
@@ -661,5 +679,26 @@
     "title": "Message Preferences",
     "invalidToken": "Invalid or expired preferences link",
     "unsubscribe": "Unsubscribe from all messages"
+  },
+  "contacts": {
+    "title": "연락처",
+    "description": "통화, 대화 및 보고서의 통합 상호작용 기록을 봅니다.",
+    "contact": "연락처",
+    "firstSeen": "첫 확인",
+    "lastSeen": "마지막 확인",
+    "call": "통화",
+    "conversation": "대화",
+    "messages": "메시지",
+    "report": "보고서",
+    "noHistory": "상호작용 기록이 없습니다",
+    "noContacts": "연락처가 없습니다"
+  },
+  "conversations": {
+    "title": "대화",
+    "thread": "대화",
+    "noMessages": "아직 메시지가 없습니다",
+    "encrypted": "종단간 암호화",
+    "placeholder": "메시지를 입력하세요...",
+    "send": "보내기"
   }
 }

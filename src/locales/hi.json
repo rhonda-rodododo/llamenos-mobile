@@ -113,7 +113,20 @@
     "exportEncrypted": "एन्क्रिप्टेड निर्यात — अपनी nsec कुंजी से डिक्रिप्ट करें",
     "viewNotes": "नोट्स",
     "activeCallNote": "आपकी सक्रिय कॉल से जुड़ा नोट",
-    "draftSaved": "ड्राफ्ट सहेजा गया"
+    "draftSaved": "ड्राफ्ट सहेजा गया",
+    "addNote": "नोट जोड़ें",
+    "placeholder": "अपना नोट लिखें...",
+    "content": "नोट सामग्री",
+    "fields": "कस्टम फ़ील्ड",
+    "saved": "नोट सहेजा गया",
+    "reply": "उत्तर दें",
+    "repliesCount": "{{count}} उत्तर",
+    "replyPlaceholder": "उत्तर लिखें...",
+    "sendReply": "भेजें",
+    "threadLoading": "थ्रेड लोड हो रहा है...",
+    "newConversationNote": "नई वार्तालाप नोट",
+    "conversationNote": "वार्तालाप नोट",
+    "linkedTo": "से जुड़ा"
   },
   "transcription": {
     "title": "ट्रांसक्रिप्शन",
@@ -470,7 +483,12 @@
       "max": "अधिकतम",
       "minLength": "न्यूनतम लंबाई",
       "maxLength": "अधिकतम लंबाई"
-    }
+    },
+    "context": "में दिखाई देता है",
+    "callNotes": "कॉल नोट्स",
+    "conversationNotes": "वार्तालाप नोट्स",
+    "reports": "रिपोर्ट",
+    "allRecordTypes": "सभी प्रकार"
   },
   "volunteerProfile": {
     "joined": "शामिल हुए",
@@ -661,5 +679,26 @@
     "title": "Message Preferences",
     "invalidToken": "Invalid or expired preferences link",
     "unsubscribe": "Unsubscribe from all messages"
+  },
+  "contacts": {
+    "title": "संपर्क",
+    "description": "कॉल, वार्तालाप और रिपोर्ट में एकीकृत इंटरैक्शन इतिहास देखें।",
+    "contact": "संपर्क",
+    "firstSeen": "पहली बार देखा",
+    "lastSeen": "आखिरी बार देखा",
+    "call": "कॉल",
+    "conversation": "वार्तालाप",
+    "messages": "संदेश",
+    "report": "रिपोर्ट",
+    "noHistory": "कोई इंटरैक्शन इतिहास नहीं मिला",
+    "noContacts": "कोई संपर्क नहीं मिला"
+  },
+  "conversations": {
+    "title": "वार्तालाप",
+    "thread": "वार्तालाप",
+    "noMessages": "अभी तक कोई संदेश नहीं",
+    "encrypted": "एंड-टू-एंड एन्क्रिप्टेड",
+    "placeholder": "संदेश टाइप करें...",
+    "send": "भेजें"
   }
 }

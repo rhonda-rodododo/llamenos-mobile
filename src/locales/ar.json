@@ -113,7 +113,20 @@
     "exportEncrypted": "تصدير مشفر — فك التشفير باستخدام مفتاح nsec",
     "viewNotes": "ملاحظات",
     "activeCallNote": "ملاحظة مرفقة بمكالمتك النشطة",
-    "draftSaved": "تم حفظ المسودة"
+    "draftSaved": "تم حفظ المسودة",
+    "addNote": "إضافة ملاحظة",
+    "placeholder": "اكتب ملاحظتك...",
+    "content": "محتوى الملاحظة",
+    "fields": "حقول مخصصة",
+    "saved": "تم حفظ الملاحظة",
+    "reply": "رد",
+    "repliesCount": "{{count}} ردود",
+    "replyPlaceholder": "اكتب ردًا...",
+    "sendReply": "إرسال",
+    "threadLoading": "جاري التحميل...",
+    "newConversationNote": "ملاحظة محادثة جديدة",
+    "conversationNote": "ملاحظة محادثة",
+    "linkedTo": "مرتبط بـ"
   },
   "transcription": {
     "title": "النسخ",
@@ -470,7 +483,12 @@
       "max": "الحد الأقصى",
       "minLength": "الحد الأدنى للطول",
       "maxLength": "الحد الأقصى للطول"
-    }
+    },
+    "context": "يظهر في",
+    "callNotes": "ملاحظات المكالمة",
+    "conversationNotes": "ملاحظات المحادثة",
+    "reports": "التقارير",
+    "allRecordTypes": "جميع الأنواع"
   },
   "volunteerProfile": {
     "joined": "انضم في",
@@ -661,5 +679,26 @@
     "title": "Message Preferences",
     "invalidToken": "Invalid or expired preferences link",
     "unsubscribe": "Unsubscribe from all messages"
+  },
+  "contacts": {
+    "title": "جهات الاتصال",
+    "description": "عرض سجل التفاعل الموحد عبر المكالمات والمحادثات والتقارير.",
+    "contact": "جهة اتصال",
+    "firstSeen": "أول ظهور",
+    "lastSeen": "آخر ظهور",
+    "call": "مكالمة",
+    "conversation": "محادثة",
+    "messages": "رسائل",
+    "report": "تقرير",
+    "noHistory": "لم يتم العثور على سجل تفاعل",
+    "noContacts": "لم يتم العثور على جهات اتصال"
+  },
+  "conversations": {
+    "title": "المحادثات",
+    "thread": "محادثة",
+    "noMessages": "لا توجد رسائل بعد",
+    "encrypted": "مشفر من طرف إلى طرف",
+    "placeholder": "اكتب رسالة...",
+    "send": "إرسال"
   }
 }

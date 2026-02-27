@@ -113,7 +113,20 @@
     "exportEncrypted": "Ekspò chifre — dechifre ak kle nsec ou",
     "viewNotes": "Nòt",
     "activeCallNote": "Nòt ki tache ak apèl aktif ou a",
-    "draftSaved": "Bouyon anrejistre"
+    "draftSaved": "Bouyon anrejistre",
+    "addNote": "Ajoute Nòt",
+    "placeholder": "Ekri nòt ou a...",
+    "content": "Kontni Nòt la",
+    "fields": "Chan Pèsonalize",
+    "saved": "Nòt la anrejistre",
+    "reply": "Reponn",
+    "repliesCount": "{{count}} repons",
+    "replyPlaceholder": "Ekri yon repons...",
+    "sendReply": "Voye",
+    "threadLoading": "Ap chaje fil la...",
+    "newConversationNote": "Nouvo Nòt Konvèsasyon",
+    "conversationNote": "Nòt konvèsasyon",
+    "linkedTo": "Lye ak"
   },
   "transcription": {
     "title": "Transkripsyon",
@@ -470,7 +483,12 @@
       "max": "Maks",
       "minLength": "Longè Min",
       "maxLength": "Longè Maks"
-    }
+    },
+    "context": "Parèt Nan",
+    "callNotes": "Nòt Apèl",
+    "conversationNotes": "Nòt Konvèsasyon",
+    "reports": "Rapò",
+    "allRecordTypes": "Tout Kalite"
   },
   "volunteerProfile": {
     "joined": "Te antre",
@@ -661,5 +679,26 @@
     "title": "Message Preferences",
     "invalidToken": "Invalid or expired preferences link",
     "unsubscribe": "Unsubscribe from all messages"
+  },
+  "contacts": {
+    "title": "Kontak",
+    "description": "Wè istwa entèraksyon inifye atravè apèl, konvèsasyon ak rapò.",
+    "contact": "Kontak",
+    "firstSeen": "Premye fwa parèt",
+    "lastSeen": "Dènye fwa parèt",
+    "call": "Apèl",
+    "conversation": "Konvèsasyon",
+    "messages": "mesaj",
+    "report": "Rapò",
+    "noHistory": "Pa jwenn istwa entèraksyon",
+    "noContacts": "Pa jwenn kontak"
+  },
+  "conversations": {
+    "title": "Konvèsasyon",
+    "thread": "Konvèsasyon",
+    "noMessages": "Pa gen mesaj ankò",
+    "encrypted": "Chifre de bout an bout",
+    "placeholder": "Tape yon mesaj...",
+    "send": "Voye"
   }
 }

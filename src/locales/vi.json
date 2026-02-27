@@ -113,7 +113,20 @@
     "exportEncrypted": "Xuất đã mã hóa — giải mã bằng khóa nsec của bạn",
     "viewNotes": "Ghi chú",
     "activeCallNote": "Ghi chú đính kèm cuộc gọi đang hoạt động của bạn",
-    "draftSaved": "Đã lưu bản nháp"
+    "draftSaved": "Đã lưu bản nháp",
+    "addNote": "Thêm Ghi Chú",
+    "placeholder": "Viết ghi chú của bạn...",
+    "content": "Nội Dung Ghi Chú",
+    "fields": "Trường Tùy Chỉnh",
+    "saved": "Đã lưu ghi chú",
+    "reply": "Trả lời",
+    "repliesCount": "{{count}} trả lời",
+    "replyPlaceholder": "Viết trả lời...",
+    "sendReply": "Gửi",
+    "threadLoading": "Đang tải...",
+    "newConversationNote": "Ghi Chú Cuộc Trò Chuyện Mới",
+    "conversationNote": "Ghi chú cuộc trò chuyện",
+    "linkedTo": "Liên kết với"
   },
   "transcription": {
     "title": "Phiên âm",
@@ -470,7 +483,12 @@
       "max": "Tối đa",
       "minLength": "Độ dài tối thiểu",
       "maxLength": "Độ dài tối đa"
-    }
+    },
+    "context": "Xuất Hiện Trong",
+    "callNotes": "Ghi Chú Cuộc Gọi",
+    "conversationNotes": "Ghi Chú Cuộc Trò Chuyện",
+    "reports": "Báo Cáo",
+    "allRecordTypes": "Tất Cả Loại"
   },
   "volunteerProfile": {
     "joined": "Tham gia",
@@ -661,5 +679,26 @@
     "title": "Message Preferences",
     "invalidToken": "Invalid or expired preferences link",
     "unsubscribe": "Unsubscribe from all messages"
+  },
+  "contacts": {
+    "title": "Danh Bạ",
+    "description": "Xem lịch sử tương tác thống nhất qua cuộc gọi, cuộc trò chuyện và báo cáo.",
+    "contact": "Liên Hệ",
+    "firstSeen": "Lần đầu xuất hiện",
+    "lastSeen": "Lần cuối xuất hiện",
+    "call": "Cuộc gọi",
+    "conversation": "Cuộc trò chuyện",
+    "messages": "tin nhắn",
+    "report": "Báo cáo",
+    "noHistory": "Không tìm thấy lịch sử tương tác",
+    "noContacts": "Không tìm thấy danh bạ"
+  },
+  "conversations": {
+    "title": "Cuộc Trò Chuyện",
+    "thread": "Cuộc Trò Chuyện",
+    "noMessages": "Chưa có tin nhắn",
+    "encrypted": "Mã hóa đầu cuối",
+    "placeholder": "Nhập tin nhắn...",
+    "send": "Gửi"
   }
 }

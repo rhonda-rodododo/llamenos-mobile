@@ -113,7 +113,20 @@
     "exportEncrypted": "Exportación cifrada — descifrar con tu clave nsec",
     "viewNotes": "Notas",
     "activeCallNote": "Nota adjunta a tu llamada activa",
-    "draftSaved": "Borrador guardado"
+    "draftSaved": "Borrador guardado",
+    "addNote": "Agregar Nota",
+    "placeholder": "Escribe tu nota...",
+    "content": "Contenido de la Nota",
+    "fields": "Campos Personalizados",
+    "saved": "Nota guardada",
+    "reply": "Responder",
+    "repliesCount": "{{count}} respuestas",
+    "replyPlaceholder": "Escribe una respuesta...",
+    "sendReply": "Enviar",
+    "threadLoading": "Cargando hilo...",
+    "newConversationNote": "Nueva Nota de Conversación",
+    "conversationNote": "Nota de conversación",
+    "linkedTo": "Vinculado a"
   },
   "transcription": {
     "title": "Transcripción",
@@ -470,7 +483,12 @@
       "max": "Máx",
       "minLength": "Longitud Mín",
       "maxLength": "Longitud Máx"
-    }
+    },
+    "context": "Aparece En",
+    "callNotes": "Notas de Llamada",
+    "conversationNotes": "Notas de Conversación",
+    "reports": "Informes",
+    "allRecordTypes": "Todos los Tipos"
   },
   "volunteerProfile": {
     "joined": "Se unió",
@@ -661,5 +679,26 @@
     "title": "Message Preferences",
     "invalidToken": "Invalid or expired preferences link",
     "unsubscribe": "Unsubscribe from all messages"
+  },
+  "contacts": {
+    "title": "Contactos",
+    "description": "Ver historial de interacciones unificado a través de llamadas, conversaciones e informes.",
+    "contact": "Contacto",
+    "firstSeen": "Visto por primera vez",
+    "lastSeen": "Visto por última vez",
+    "call": "Llamada",
+    "conversation": "Conversación",
+    "messages": "mensajes",
+    "report": "Informe",
+    "noHistory": "No se encontró historial de interacciones",
+    "noContacts": "No se encontraron contactos"
+  },
+  "conversations": {
+    "title": "Conversaciones",
+    "thread": "Conversación",
+    "noMessages": "Sin mensajes aún",
+    "encrypted": "Cifrado de extremo a extremo",
+    "placeholder": "Escribe un mensaje...",
+    "send": "Enviar"
   }
 }

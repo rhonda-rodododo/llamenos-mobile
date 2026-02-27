@@ -113,7 +113,20 @@
     "exportEncrypted": "Exportação encriptada — desencriptar com a sua chave nsec",
     "viewNotes": "Notas",
     "activeCallNote": "Nota anexada à sua chamada ativa",
-    "draftSaved": "Rascunho salvo"
+    "draftSaved": "Rascunho salvo",
+    "addNote": "Adicionar Nota",
+    "placeholder": "Escreva sua nota...",
+    "content": "Conteúdo da Nota",
+    "fields": "Campos Personalizados",
+    "saved": "Nota salva",
+    "reply": "Responder",
+    "repliesCount": "{{count}} respostas",
+    "replyPlaceholder": "Escreva uma resposta...",
+    "sendReply": "Enviar",
+    "threadLoading": "Carregando tópico...",
+    "newConversationNote": "Nova Nota de Conversa",
+    "conversationNote": "Nota de conversa",
+    "linkedTo": "Vinculado a"
   },
   "transcription": {
     "title": "Transcrição",
@@ -470,7 +483,12 @@
       "max": "Máx",
       "minLength": "Comprimento Mín",
       "maxLength": "Comprimento Máx"
-    }
+    },
+    "context": "Aparece Em",
+    "callNotes": "Notas de Chamada",
+    "conversationNotes": "Notas de Conversa",
+    "reports": "Relatórios",
+    "allRecordTypes": "Todos os Tipos"
   },
   "volunteerProfile": {
     "joined": "Entrou em",
@@ -661,5 +679,26 @@
     "title": "Message Preferences",
     "invalidToken": "Invalid or expired preferences link",
     "unsubscribe": "Unsubscribe from all messages"
+  },
+  "contacts": {
+    "title": "Contatos",
+    "description": "Veja o histórico de interações unificado em chamadas, conversas e relatórios.",
+    "contact": "Contato",
+    "firstSeen": "Primeira aparição",
+    "lastSeen": "Última aparição",
+    "call": "Chamada",
+    "conversation": "Conversa",
+    "messages": "mensagens",
+    "report": "Relatório",
+    "noHistory": "Nenhum histórico de interações encontrado",
+    "noContacts": "Nenhum contato encontrado"
+  },
+  "conversations": {
+    "title": "Conversas",
+    "thread": "Conversa",
+    "noMessages": "Sem mensagens ainda",
+    "encrypted": "Criptografia ponta a ponta",
+    "placeholder": "Digite uma mensagem...",
+    "send": "Enviar"
   }
 }

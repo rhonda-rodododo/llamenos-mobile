@@ -113,7 +113,20 @@
     "exportEncrypted": "加密导出 — 使用您的nsec密钥解密",
     "viewNotes": "笔记",
     "activeCallNote": "附在当前通话上的笔记",
-    "draftSaved": "草稿已保存"
+    "draftSaved": "草稿已保存",
+    "addNote": "添加笔记",
+    "placeholder": "写下你的笔记...",
+    "content": "笔记内容",
+    "fields": "自定义字段",
+    "saved": "笔记已保存",
+    "reply": "回复",
+    "repliesCount": "{{count}} 条回复",
+    "replyPlaceholder": "写一条回复...",
+    "sendReply": "发送",
+    "threadLoading": "加载中...",
+    "newConversationNote": "新对话笔记",
+    "conversationNote": "对话笔记",
+    "linkedTo": "关联到"
   },
   "transcription": {
     "title": "转录",
@@ -470,7 +483,12 @@
       "max": "最大值",
       "minLength": "最小长度",
       "maxLength": "最大长度"
-    }
+    },
+    "context": "出现在",
+    "callNotes": "通话笔记",
+    "conversationNotes": "对话笔记",
+    "reports": "报告",
+    "allRecordTypes": "所有类型"
   },
   "volunteerProfile": {
     "joined": "加入于",
@@ -661,5 +679,26 @@
     "title": "Message Preferences",
     "invalidToken": "Invalid or expired preferences link",
     "unsubscribe": "Unsubscribe from all messages"
+  },
+  "contacts": {
+    "title": "联系人",
+    "description": "查看跨电话、对话和报告的统一互动历史。",
+    "contact": "联系人",
+    "firstSeen": "首次出现",
+    "lastSeen": "最近出现",
+    "call": "通话",
+    "conversation": "对话",
+    "messages": "消息",
+    "report": "报告",
+    "noHistory": "未找到互动历史",
+    "noContacts": "未找到联系人"
+  },
+  "conversations": {
+    "title": "对话",
+    "thread": "对话",
+    "noMessages": "暂无消息",
+    "encrypted": "端到端加密",
+    "placeholder": "输入消息...",
+    "send": "发送"
   }
 }

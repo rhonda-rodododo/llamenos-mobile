@@ -113,7 +113,20 @@
     "exportEncrypted": "Na-encrypt na export — i-decrypt gamit ang iyong nsec key",
     "viewNotes": "Mga Tala",
     "activeCallNote": "Tala na nakakabit sa iyong aktibong tawag",
-    "draftSaved": "Na-save ang draft"
+    "draftSaved": "Na-save ang draft",
+    "addNote": "Magdagdag ng Tala",
+    "placeholder": "Isulat ang iyong tala...",
+    "content": "Nilalaman ng Tala",
+    "fields": "Mga Custom na Field",
+    "saved": "Na-save ang tala",
+    "reply": "Sumagot",
+    "repliesCount": "{{count}} tugon",
+    "replyPlaceholder": "Magsulat ng tugon...",
+    "sendReply": "Ipadala",
+    "threadLoading": "Naglo-load...",
+    "newConversationNote": "Bagong Tala ng Usapan",
+    "conversationNote": "Tala ng usapan",
+    "linkedTo": "Naka-link sa"
   },
   "transcription": {
     "title": "Transkripsyon",
@@ -470,7 +483,12 @@
       "max": "Max",
       "minLength": "Min na Haba",
       "maxLength": "Max na Haba"
-    }
+    },
+    "context": "Lumalabas Sa",
+    "callNotes": "Mga Tala ng Tawag",
+    "conversationNotes": "Mga Tala ng Usapan",
+    "reports": "Mga Ulat",
+    "allRecordTypes": "Lahat ng Uri"
   },
   "volunteerProfile": {
     "joined": "Sumali noong",
@@ -661,5 +679,26 @@
     "title": "Message Preferences",
     "invalidToken": "Invalid or expired preferences link",
     "unsubscribe": "Unsubscribe from all messages"
+  },
+  "contacts": {
+    "title": "Mga Kontak",
+    "description": "Tingnan ang pinag-isang kasaysayan ng interaksyon sa mga tawag, usapan, at ulat.",
+    "contact": "Kontak",
+    "firstSeen": "Unang nakita",
+    "lastSeen": "Huling nakita",
+    "call": "Tawag",
+    "conversation": "Usapan",
+    "messages": "mensahe",
+    "report": "Ulat",
+    "noHistory": "Walang nahanap na kasaysayan ng interaksyon",
+    "noContacts": "Walang nahanap na kontak"
+  },
+  "conversations": {
+    "title": "Mga Usapan",
+    "thread": "Usapan",
+    "noMessages": "Wala pang mensahe",
+    "encrypted": "End-to-end encrypted",
+    "placeholder": "Mag-type ng mensahe...",
+    "send": "Ipadala"
   }
 }

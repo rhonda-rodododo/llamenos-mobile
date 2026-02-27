@@ -103,7 +103,12 @@
     "title": "Call Notes",
     "newNote": "New Note",
     "editNote": "Edit Note",
+    "addNote": "Add Note",
     "notePlaceholder": "Enter your notes about this call...",
+    "placeholder": "Write your note...",
+    "content": "Note Content",
+    "fields": "Custom Fields",
+    "saved": "Note saved",
     "savedAt": "Saved at {{time}}",
     "noNotes": "No notes yet",
     "callWith": "Call with {{number}}",
@@ -119,7 +124,15 @@
     "exportEncrypted": "Export encrypted — decrypt with your nsec key",
     "viewNotes": "Notes",
     "activeCallNote": "Note attached to your active call",
-    "draftSaved": "Draft saved"
+    "draftSaved": "Draft saved",
+    "reply": "Reply",
+    "repliesCount": "{{count}} replies",
+    "replyPlaceholder": "Write a reply...",
+    "sendReply": "Send",
+    "threadLoading": "Loading thread...",
+    "newConversationNote": "New Conversation Note",
+    "conversationNote": "Conversation note",
+    "linkedTo": "Linked to"
   },
   "transcription": {
     "title": "Transcription",
@@ -329,6 +342,27 @@
     "to": "To",
     "unanswered": "Unanswered",
     "hasVoicemail": "Voicemail"
+  },
+  "contacts": {
+    "title": "Contacts",
+    "description": "View unified interaction history across calls, conversations, and reports.",
+    "contact": "Contact",
+    "firstSeen": "First seen",
+    "lastSeen": "Last seen",
+    "call": "Call",
+    "conversation": "Conversation",
+    "messages": "messages",
+    "report": "Report",
+    "noHistory": "No interaction history found",
+    "noContacts": "No contacts found"
+  },
+  "conversations": {
+    "title": "Conversations",
+    "thread": "Conversation",
+    "noMessages": "No messages yet",
+    "encrypted": "End-to-end encrypted",
+    "placeholder": "Type a message...",
+    "send": "Send"
   },
   "profile": {
     "welcome": "Welcome!",
@@ -547,7 +581,12 @@
       "max": "Max",
       "minLength": "Min Length",
       "maxLength": "Max Length"
-    }
+    },
+    "context": "Appears In",
+    "callNotes": "Call Notes",
+    "conversationNotes": "Conversation Notes",
+    "reports": "Reports",
+    "allRecordTypes": "All Record Types"
   },
   "volunteerProfile": {
     "joined": "Joined",

@@ -52,6 +52,13 @@ export const TestIds = {
   NOTE_NEW_BTN: 'note-new-btn',
   NOTE_CONTENT: 'note-content',
   NOTE_EMPTY_STATE: 'notes-empty-state',
+  NOTE_REPLY_BTN: 'note-reply-btn',
+  NOTE_THREAD: 'note-thread',
+  NOTE_REPLY_INPUT: 'note-reply-input',
+  NOTE_REPLY_SEND: 'note-reply-send',
+  NOTE_FORM_MODAL: 'note-form-modal',
+  NOTE_TEXT_INPUT: 'note-text-input',
+  NOTE_SAVE_BTN: 'note-save-btn',
 
   // Shifts
   SHIFTS_SCREEN: 'shifts-screen',
@@ -66,6 +73,7 @@ export const TestIds = {
   CONVERSATIONS_LIST: 'conversations-list',
   CONVERSATION_ROW: 'conversation-row',
   CONVERSATIONS_EMPTY_STATE: 'conversations-empty-state',
+  CONV_ADD_NOTE_BTN: 'conv-add-note-btn',
 
   // Settings
   SETTINGS_SCREEN: 'settings-screen',
@@ -75,6 +83,11 @@ export const TestIds = {
   SETTINGS_LANGUAGE_PICKER: 'settings-language-picker',
   SETTINGS_LOCK_BTN: 'settings-lock-btn',
   SETTINGS_WIPE_BTN: 'settings-wipe-btn',
+
+  // Contacts (admin)
+  ADMIN_CONTACTS_LINK: 'admin-contacts-link',
+  CONTACT_ROW: 'contact-row',
+  CONTACT_TIMELINE: 'contact-timeline',
 
   // Admin
   ADMIN_VOLUNTEERS_SCREEN: 'admin-volunteers-screen',

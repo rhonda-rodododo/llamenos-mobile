@@ -113,7 +113,20 @@
     "exportEncrypted": "Verschlüsselter Export — mit Ihrem nsec-Schlüssel entschlüsseln",
     "viewNotes": "Notizen",
     "activeCallNote": "Notiz zu Ihrem aktiven Anruf",
-    "draftSaved": "Entwurf gespeichert"
+    "draftSaved": "Entwurf gespeichert",
+    "addNote": "Notiz Hinzufügen",
+    "placeholder": "Schreiben Sie Ihre Notiz...",
+    "content": "Notizinhalt",
+    "fields": "Benutzerdefinierte Felder",
+    "saved": "Notiz gespeichert",
+    "reply": "Antworten",
+    "repliesCount": "{{count}} Antworten",
+    "replyPlaceholder": "Antwort schreiben...",
+    "sendReply": "Senden",
+    "threadLoading": "Thread wird geladen...",
+    "newConversationNote": "Neue Gesprächsnotiz",
+    "conversationNote": "Gesprächsnotiz",
+    "linkedTo": "Verknüpft mit"
   },
   "transcription": {
     "title": "Transkription",
@@ -470,7 +483,12 @@
       "max": "Max",
       "minLength": "Min. Länge",
       "maxLength": "Max. Länge"
-    }
+    },
+    "context": "Erscheint In",
+    "callNotes": "Anrufnotizen",
+    "conversationNotes": "Gesprächsnotizen",
+    "reports": "Berichte",
+    "allRecordTypes": "Alle Typen"
   },
   "volunteerProfile": {
     "joined": "Beigetreten",
@@ -661,5 +679,26 @@
     "title": "Message Preferences",
     "invalidToken": "Invalid or expired preferences link",
     "unsubscribe": "Unsubscribe from all messages"
+  },
+  "contacts": {
+    "title": "Kontakte",
+    "description": "Einheitlichen Interaktionsverlauf über Anrufe, Gespräche und Berichte anzeigen.",
+    "contact": "Kontakt",
+    "firstSeen": "Erstmals gesehen",
+    "lastSeen": "Zuletzt gesehen",
+    "call": "Anruf",
+    "conversation": "Gespräch",
+    "messages": "Nachrichten",
+    "report": "Bericht",
+    "noHistory": "Kein Interaktionsverlauf gefunden",
+    "noContacts": "Keine Kontakte gefunden"
+  },
+  "conversations": {
+    "title": "Gespräche",
+    "thread": "Gespräch",
+    "noMessages": "Noch keine Nachrichten",
+    "encrypted": "Ende-zu-Ende verschlüsselt",
+    "placeholder": "Nachricht eingeben...",
+    "send": "Senden"
   }
 }

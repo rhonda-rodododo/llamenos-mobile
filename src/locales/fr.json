@@ -113,7 +113,20 @@
     "exportEncrypted": "Export chiffré — déchiffrer avec votre clé nsec",
     "viewNotes": "Notes",
     "activeCallNote": "Note attachée à votre appel actif",
-    "draftSaved": "Brouillon enregistré"
+    "draftSaved": "Brouillon enregistré",
+    "addNote": "Ajouter une Note",
+    "placeholder": "Écrivez votre note...",
+    "content": "Contenu de la Note",
+    "fields": "Champs Personnalisés",
+    "saved": "Note enregistrée",
+    "reply": "Répondre",
+    "repliesCount": "{{count}} réponses",
+    "replyPlaceholder": "Écrire une réponse...",
+    "sendReply": "Envoyer",
+    "threadLoading": "Chargement du fil...",
+    "newConversationNote": "Nouvelle Note de Conversation",
+    "conversationNote": "Note de conversation",
+    "linkedTo": "Lié à"
   },
   "transcription": {
     "title": "Transcription",
@@ -470,7 +483,12 @@
       "max": "Max",
       "minLength": "Longueur min",
       "maxLength": "Longueur max"
-    }
+    },
+    "context": "Apparaît Dans",
+    "callNotes": "Notes d'Appel",
+    "conversationNotes": "Notes de Conversation",
+    "reports": "Rapports",
+    "allRecordTypes": "Tous les Types"
   },
   "volunteerProfile": {
     "joined": "Inscrit le",
@@ -661,5 +679,26 @@
     "title": "Message Preferences",
     "invalidToken": "Invalid or expired preferences link",
     "unsubscribe": "Unsubscribe from all messages"
+  },
+  "contacts": {
+    "title": "Contacts",
+    "description": "Voir l'historique d'interactions unifié à travers les appels, conversations et rapports.",
+    "contact": "Contact",
+    "firstSeen": "Première apparition",
+    "lastSeen": "Dernière apparition",
+    "call": "Appel",
+    "conversation": "Conversation",
+    "messages": "messages",
+    "report": "Rapport",
+    "noHistory": "Aucun historique d'interactions trouvé",
+    "noContacts": "Aucun contact trouvé"
+  },
+  "conversations": {
+    "title": "Conversations",
+    "thread": "Conversation",
+    "noMessages": "Aucun message pour l'instant",
+    "encrypted": "Chiffré de bout en bout",
+    "placeholder": "Écrire un message...",
+    "send": "Envoyer"
   }
 }
