@@ -1,9 +1,11 @@
 # CI workflow for mobile (React Native / Expo) E2E tests.
 # Runs Detox tests on iOS simulator and Android emulator.
 #
-# Trigger: PRs touching src/, app/, or e2e/, manual dispatch.
+# Trigger: PRs touching src/, app/, or e2e/, manual dispatch,
+#          repository_dispatch (core-updated) from llamenos-core.
 # Epic 88: Desktop & Mobile E2E Tests.
 # Epic 104: Mobile E2E Test Expansion — CI fixes.
+# Epic 116: Cross-Repo CI Integration.
 
 name: Mobile E2E Tests
 
@@ -16,6 +18,8 @@ on:
       - '.detoxrc.js'
       - 'package.json'
       - 'bun.lock'
+  repository_dispatch:
+    types: [core-updated]
   workflow_dispatch:
 
 permissions:
@@ -38,6 +42,9 @@ jobs:
 
       - name: Install dependencies
         run: bun install --frozen-lockfile
+
+      - name: Run unit tests
+        run: bun run test:unit
 
       - name: Install applesimutils
         run: brew tap wix/brew && brew install applesimutils
@@ -104,6 +111,9 @@ jobs:
 
       - name: Install dependencies
         run: bun install --frozen-lockfile
+
+      - name: Run unit tests
+        run: bun run test:unit
 
       - name: Enable KVM for Android emulator
         run: |
