@@ -144,12 +144,12 @@ class LlamenosSipModule : Module() {
 
     AsyncFunction("getAudioDevices") {
       core?.audioDevices?.map { device ->
-        mapOf(
+        mapOf<String, Any>(
           "id" to device.id,
           "name" to device.deviceName,
           "type" to audioDeviceTypeString(device.type),
         )
-      } ?: emptyList()
+      } ?: emptyList<Map<String, Any>>()
     }
 
     AsyncFunction("setAudioDevice") { deviceId: String ->
@@ -177,10 +177,6 @@ class LlamenosSipModule : Module() {
       "fcm-pending"
     }
 
-    AsyncFunction("getRegistrationState") {
-      account?.let { registrationStateToString(it.state) } ?: "none"
-    }
-
     OnDestroy {
       shutdownCore()
     }
@@ -205,8 +201,9 @@ class LlamenosSipModule : Module() {
       codec.enable(mime == "opus" || mime == "pcmu" || mime == "pcma")
     }
 
-    // Disable video
-    c.isVideoEnabled = false
+    // Disable video (capture + display — isVideoEnabled is read-only in SDK 5.4)
+    c.isVideoCaptureEnabled = false
+    c.isVideoDisplayEnabled = false
 
     // Default media encryption: SRTP mandatory
     c.mediaEncryption = MediaEncryption.SRTP
@@ -327,8 +324,8 @@ class LlamenosSipModule : Module() {
     val acct = account ?: return
     val c = core ?: return
 
-    val params = acct.params?.clone()
-    params?.isRegisterEnabled = false
+    val params = acct.params?.clone() ?: return
+    params.isRegisterEnabled = false
     acct.params = params
     c.removeAccount(acct)
     c.clearAllAuthInfo()

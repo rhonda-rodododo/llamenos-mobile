@@ -72,8 +72,7 @@
         }
       ],
       "expo-font",
-      "./modules/llamenos-sip/app.plugin.js",
-      "./plugins/with-swift-concurrency-fix.js"
+      "./modules/llamenos-sip/app.plugin.js"
     ]
   }
 }
