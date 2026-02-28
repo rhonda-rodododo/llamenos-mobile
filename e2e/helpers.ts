@@ -38,22 +38,27 @@ export async function authenticateApp() {
 
 /**
  * Enter a PIN using the digit inputs.
- * Types all digits at once into the first input — the PinInput component's
- * auto-advance mechanism (onChangeText → focus next) distributes each
- * character to the correct input. Detox/Espresso idle-syncs between
- * characters, giving React time to process state updates.
+ * Types each digit into its specific input via keyboard, with a delay
+ * between digits to let React process the state update and auto-advance
+ * focus to the next input.
  *
- * This avoids per-digit tap+type which causes race conditions:
- * tapping an already-focused input triggers selectTextOnFocus + re-render,
- * which can drop the subsequent typeText character.
+ * Why per-digit with delays instead of typing all at once:
+ * - typeText('1234') types too fast on iOS — characters arrive before
+ *   React's async state update + auto-advance completes, so multiple
+ *   characters hit the same input (maxLength=1 drops the first).
+ * - Per-digit typeText with delays gives React time to process each
+ *   state update and move focus before the next character arrives.
  */
 export async function enterPin(pin: string = '1111') {
   await waitFor(element(by.id('pin-digit-0')))
     .toBeVisible()
     .withTimeout(10_000)
 
-  // Type all digits at once — auto-advance distributes them across inputs
-  await element(by.id('pin-digit-0')).typeText(pin)
+  for (let i = 0; i < pin.length; i++) {
+    await element(by.id(`pin-digit-${i}`)).typeText(pin[i])
+    // Wait for React state update + auto-advance focus
+    await new Promise(resolve => setTimeout(resolve, 300))
+  }
 
   // Wait for onComplete to fire and state to settle
   await new Promise(resolve => setTimeout(resolve, 500))
