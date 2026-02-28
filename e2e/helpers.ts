@@ -38,21 +38,22 @@ export async function authenticateApp() {
 
 /**
  * Enter a PIN using the digit inputs.
- * Waits for the first digit to be visible, then types each digit via keyboard.
- * Uses typeText (keyboard events) instead of replaceText (direct text injection)
- * because replaceText doesn't trigger onChangeText reliably on Android's
- * Bridgeless architecture.
+ * Types all digits at once into the first input — the PinInput component's
+ * auto-advance mechanism (onChangeText → focus next) distributes each
+ * character to the correct input. Detox/Espresso idle-syncs between
+ * characters, giving React time to process state updates.
+ *
+ * This avoids per-digit tap+type which causes race conditions:
+ * tapping an already-focused input triggers selectTextOnFocus + re-render,
+ * which can drop the subsequent typeText character.
  */
 export async function enterPin(pin: string = '1111') {
   await waitFor(element(by.id('pin-digit-0')))
     .toBeVisible()
     .withTimeout(10_000)
 
-  // Type each digit into its input — typeText goes through the keyboard,
-  // which reliably triggers onChangeText and the auto-advance mechanism
-  for (let i = 0; i < pin.length; i++) {
-    await element(by.id(`pin-digit-${i}`)).typeText(pin[i])
-  }
+  // Type all digits at once — auto-advance distributes them across inputs
+  await element(by.id('pin-digit-0')).typeText(pin)
 
   // Wait for onComplete to fire and state to settle
   await new Promise(resolve => setTimeout(resolve, 500))
