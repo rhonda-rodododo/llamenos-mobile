@@ -1,7 +1,7 @@
 # CI workflow for mobile (React Native / Expo) E2E tests.
 # Runs Detox tests on iOS simulator and Android emulator.
 #
-# Trigger: PRs touching src/, app/, or e2e/, manual dispatch,
+# Trigger: Pushes to main, PRs touching app/native code, manual dispatch,
 #          repository_dispatch (core-updated) from llamenos-core.
 # Epic 88: Desktop & Mobile E2E Tests.
 # Epic 104: Mobile E2E Test Expansion — CI fixes.
@@ -10,13 +10,27 @@
 name: Mobile E2E Tests
 
 on:
+  push:
+    branches: [main]
+    paths:
+      - 'src/**'
+      - 'app/**'
+      - 'e2e/**'
+      - '__tests__/**'
+      - 'modules/**'
+      - '.detoxrc.js'
+      - '.github/workflows/**'
+      - 'package.json'
+      - 'bun.lock'
   pull_request:
     paths:
       - 'src/**'
       - 'app/**'
       - 'e2e/**'
       - '__tests__/**'
+      - 'modules/**'
       - '.detoxrc.js'
+      - '.github/workflows/**'
       - 'package.json'
       - 'bun.lock'
   repository_dispatch:
