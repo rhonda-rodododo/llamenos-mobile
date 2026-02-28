@@ -52,7 +52,7 @@ module.exports = {
   devices: {
     simulator: {
       type: 'ios.simulator',
-      device: { type: 'iPhone 16' },
+      device: { type: process.env.DETOX_IOS_DEVICE_TYPE || 'iPhone 16' },
     },
     emulator: {
       type: 'android.emulator',

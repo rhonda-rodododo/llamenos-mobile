@@ -88,15 +88,66 @@ jobs:
         run: cd ios && pod install --repo-update
 
       - name: Boot iOS simulator
+        id: boot-sim
         run: |
-          DEVICE_ID=$(xcrun simctl list devices available -j | \
-            python3 -c "import json,sys; devs=json.load(sys.stdin)['devices']; iphones=[d for v in devs.values() for d in v if 'iPhone 16' in d['name'] and d['isAvailable']]; print(iphones[0]['udid'] if iphones else '')")
-          if [ -z "$DEVICE_ID" ]; then
-            # Find the latest available iOS runtime
+          # List available runtimes and device types for debugging
+          echo "=== Available iOS runtimes ==="
+          xcrun simctl list runtimes | grep -i ios || true
+          echo ""
+          echo "=== Available iPhone device types ==="
+          xcrun simctl list devicetypes | grep -i iphone || true
+          echo ""
+
+          # Find any available iPhone simulator, preferring iPhone 16, then latest
+          DEVICE_INFO=$(xcrun simctl list devices available -j | \
+            python3 -c "
+          import json, sys
+          devs = json.load(sys.stdin)['devices']
+          iphones = []
+          for v in devs.values():
+              for d in v:
+                  if 'iPhone' in d['name'] and d['isAvailable']:
+                      iphones.append(d)
+          # Prefer iPhone 16, then sort by name descending (latest model first)
+          preferred = [d for d in iphones if 'iPhone 16' in d['name']]
+          if preferred:
+              chosen = preferred[0]
+          elif iphones:
+              iphones.sort(key=lambda d: d['name'], reverse=True)
+              chosen = iphones[0]
+          else:
+              chosen = None
+          if chosen:
+              print(f\"{chosen['udid']}|{chosen['name']}\")
+          else:
+              print('')
+          ")
+
+          if [ -n "$DEVICE_INFO" ]; then
+            DEVICE_ID="${DEVICE_INFO%%|*}"
+            DEVICE_NAME="${DEVICE_INFO##*|}"
+            echo "Found existing simulator: $DEVICE_NAME ($DEVICE_ID)"
+          else
+            # No iPhone simulator found — create one with the latest runtime
             RUNTIME=$(xcrun simctl list runtimes -j | python3 -c "import json,sys; rts=json.load(sys.stdin)['runtimes']; ios=[r for r in rts if r['platform']=='iOS' and r['isAvailable']]; print(ios[-1]['identifier'] if ios else '')")
-            DEVICE_ID=$(xcrun simctl create "iPhone 16" "com.apple.CoreSimulator.SimDeviceType.iPhone-16" "$RUNTIME")
+            echo "Creating iPhone 16 simulator with runtime: $RUNTIME"
+            DEVICE_ID=$(xcrun simctl create "iPhone 16" "com.apple.CoreSimulator.SimDeviceType.iPhone-16" "$RUNTIME" 2>&1) || {
+              # If iPhone 16 type doesn't exist, try to find any available iPhone type
+              DEVICE_TYPE=$(xcrun simctl list devicetypes -j | python3 -c "import json,sys; dts=json.load(sys.stdin)['devicetypes']; iphones=[d for d in dts if 'iPhone' in d['name']]; print(iphones[-1]['identifier'] if iphones else '')")
+              DEVICE_NAME=$(xcrun simctl list devicetypes -j | python3 -c "import json,sys; dts=json.load(sys.stdin)['devicetypes']; iphones=[d for d in dts if 'iPhone' in d['name']]; print(iphones[-1]['name'] if iphones else 'iPhone')")
+              echo "Falling back to device type: $DEVICE_NAME ($DEVICE_TYPE)"
+              DEVICE_ID=$(xcrun simctl create "$DEVICE_NAME" "$DEVICE_TYPE" "$RUNTIME")
+            }
+            DEVICE_NAME="${DEVICE_NAME:-iPhone 16}"
           fi
+
+          echo "Booting simulator: $DEVICE_ID"
           xcrun simctl boot "$DEVICE_ID" 2>/dev/null || true
+
+          # Extract the device type name for Detox (e.g., "iPhone 16" or "iPhone 17")
+          DETOX_DEVICE="${DEVICE_NAME:-iPhone 16}"
+          echo "DETOX_IOS_DEVICE_TYPE=$DETOX_DEVICE" >> "$GITHUB_ENV"
+          echo "Using Detox device type: $DETOX_DEVICE"
 
       - name: Build for Detox (iOS Debug)
         run: bunx detox build --configuration ios.sim.debug
@@ -105,6 +156,7 @@ jobs:
         run: bunx detox test --configuration ios.sim.debug --cleanup --headless
         env:
           DETOX_LOGLEVEL: verbose
+          DETOX_IOS_DEVICE_TYPE: ${{ env.DETOX_IOS_DEVICE_TYPE }}
 
       - name: Upload Detox artifacts
         if: failure()
@@ -117,7 +169,7 @@ jobs:
   android:
     runs-on: ubuntu-latest
     name: E2E (Android Emulator)
-    timeout-minutes: 60
+    timeout-minutes: 90
 
     steps:
       - name: Checkout
