@@ -44,7 +44,7 @@ jobs:
   ios:
     runs-on: macos-26
     name: E2E (iOS Simulator)
-    timeout-minutes: 45
+    timeout-minutes: 75
 
     steps:
       - name: Checkout
@@ -148,6 +148,14 @@ jobs:
           DETOX_DEVICE="${DEVICE_NAME:-iPhone 16}"
           echo "DETOX_IOS_DEVICE_TYPE=$DETOX_DEVICE" >> "$GITHUB_ENV"
           echo "Using Detox device type: $DETOX_DEVICE"
+
+      - name: Cache xcodebuild DerivedData
+        uses: actions/cache@5a3ec84eff668545956fd18022155c47e93e2684 # v4.2.3
+        with:
+          path: ios/build
+          key: xcode-${{ runner.os }}-${{ hashFiles('ios/Podfile.lock', 'bun.lock') }}
+          restore-keys: |
+            xcode-${{ runner.os }}-
 
       - name: Build for Detox (iOS Release)
         run: bunx detox build --configuration ios.sim.release

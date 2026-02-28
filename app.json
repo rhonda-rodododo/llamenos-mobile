@@ -72,7 +72,13 @@
         }
       ],
       "expo-font",
-      "./modules/llamenos-sip/app.plugin.js"
+      "./modules/llamenos-sip/app.plugin.js",
+      [
+        "@config-plugins/detox",
+        {
+          "subdomains": ["10.0.2.2", "localhost"]
+        }
+      ]
     ]
   }
 }
