@@ -222,7 +222,7 @@ export default function RootLayout() {
               <Stack.Screen name="login" />
               <Stack.Screen
                 name="onboarding"
-                options={{ presentation: 'modal', gestureEnabled: false }}
+                options={{ gestureEnabled: false, animation: 'slide_from_right' }}
               />
               <Stack.Screen name="(tabs)" />
               <Stack.Screen

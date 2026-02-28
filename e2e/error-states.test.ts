@@ -18,7 +18,7 @@ describe('Error States', () => {
     it('should show error on wrong PIN entry', async () => {
       // Navigate to login — need a stored key for PIN entry to show
       // Deep link to onboarding to set up a key first
-      await device.openURL({ url: 'llamenos-mobile://onboarding' })
+      await device.openURL({ url: 'llamenos://onboarding' })
 
       await waitFor(element(by.id('onboarding-screen')))
         .toBeVisible()

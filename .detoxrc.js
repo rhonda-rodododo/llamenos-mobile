@@ -19,6 +19,18 @@ module.exports = {
     },
   },
 
+  artifacts: {
+    rootDir: 'artifacts',
+    plugins: {
+      screenshot: {
+        shouldTakeAutomaticSnapshots: true,
+        keepOnlyFailedTestsArtifacts: true,
+        takeWhen: { testDone: true },
+      },
+      log: { enabled: true },
+    },
+  },
+
   apps: {
     'ios.debug': {
       type: 'ios.app',

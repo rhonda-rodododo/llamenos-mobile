@@ -68,7 +68,7 @@ describe('Auth Flow', () => {
     it('should show keypair after generation', async () => {
       // Navigate to onboarding directly
       // In Expo Router, deep linking may work
-      await device.openURL({ url: 'llamenos-mobile://onboarding' })
+      await device.openURL({ url: 'llamenos://onboarding' })
 
       await waitFor(element(by.id('onboarding-screen')))
         .toBeVisible()
@@ -88,7 +88,7 @@ describe('Auth Flow', () => {
     })
 
     it('should advance to PIN setup after confirming backup', async () => {
-      await device.openURL({ url: 'llamenos-mobile://onboarding' })
+      await device.openURL({ url: 'llamenos://onboarding' })
 
       await waitFor(element(by.id('onboarding-screen'))).toBeVisible().withTimeout(5_000)
       await element(by.id('onboarding-generate-btn')).tap()
@@ -102,7 +102,7 @@ describe('Auth Flow', () => {
 
   describe('PIN entry', () => {
     it('should show PIN input digits', async () => {
-      await device.openURL({ url: 'llamenos-mobile://onboarding' })
+      await device.openURL({ url: 'llamenos://onboarding' })
       await waitFor(element(by.id('onboarding-screen'))).toBeVisible().withTimeout(5_000)
       await element(by.id('onboarding-generate-btn')).tap()
       await waitFor(element(by.id('onboarding-confirm-backup-btn'))).toBeVisible().withTimeout(5_000)
@@ -116,7 +116,7 @@ describe('Auth Flow', () => {
     })
 
     it('should show error on PIN mismatch during confirm step', async () => {
-      await device.openURL({ url: 'llamenos-mobile://onboarding' })
+      await device.openURL({ url: 'llamenos://onboarding' })
       await waitFor(element(by.id('onboarding-screen'))).toBeVisible().withTimeout(5_000)
       await element(by.id('onboarding-generate-btn')).tap()
       await waitFor(element(by.id('onboarding-confirm-backup-btn'))).toBeVisible().withTimeout(5_000)
@@ -143,7 +143,7 @@ describe('Auth Flow', () => {
     it('should show error on wrong PIN then succeed on correct PIN', async () => {
       // Setup: generate key and set PIN
       await device.launchApp({ newInstance: true, delete: true })
-      await device.openURL({ url: 'llamenos-mobile://onboarding' })
+      await device.openURL({ url: 'llamenos://onboarding' })
       await waitFor(element(by.id('onboarding-screen'))).toBeVisible().withTimeout(5_000)
       await element(by.id('onboarding-generate-btn')).tap()
       await waitFor(element(by.id('onboarding-confirm-backup-btn'))).toBeVisible().withTimeout(5_000)
