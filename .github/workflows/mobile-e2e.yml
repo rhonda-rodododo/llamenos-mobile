@@ -149,24 +149,11 @@ jobs:
           echo "DETOX_IOS_DEVICE_TYPE=$DETOX_DEVICE" >> "$GITHUB_ENV"
           echo "Using Detox device type: $DETOX_DEVICE"
 
-      - name: Build for Detox (iOS Debug)
-        run: bunx detox build --configuration ios.sim.debug
-
-      - name: Start Metro bundler
-        run: |
-          nohup bunx react-native start --port 8081 &
-          # Wait for Metro to be ready (up to 60s)
-          for i in $(seq 1 30); do
-            if curl -sf http://localhost:8081/status 2>/dev/null | grep -q "packager-status:running"; then
-              echo "Metro bundler is ready"
-              break
-            fi
-            echo "Waiting for Metro... ($i/30)"
-            sleep 2
-          done
+      - name: Build for Detox (iOS Release)
+        run: bunx detox build --configuration ios.sim.release
 
       - name: Run Detox tests (iOS)
-        run: bunx detox test --configuration ios.sim.debug --cleanup --headless
+        run: bunx detox test --configuration ios.sim.release --cleanup --headless
         env:
           DETOX_LOGLEVEL: verbose
           DETOX_IOS_DEVICE_TYPE: ${{ env.DETOX_IOS_DEVICE_TYPE }}
@@ -251,21 +238,20 @@ jobs:
           restore-keys: |
             gradle-${{ runner.os }}-
 
+      - name: Pre-bundle JS for Android
+        run: |
+          mkdir -p android/app/src/main/assets
+          bunx react-native bundle \
+            --platform android \
+            --dev true \
+            --entry-file index.js \
+            --bundle-output android/app/src/main/assets/index.android.bundle \
+            --assets-dest android/app/src/main/res
+          echo "Bundle created at android/app/src/main/assets/index.android.bundle"
+          ls -la android/app/src/main/assets/
+
       - name: Build for Detox (Android Debug)
         run: bunx detox build --configuration android.emu.debug
-
-      - name: Start Metro bundler
-        run: |
-          nohup bunx react-native start --port 8081 &
-          # Wait for Metro to be ready (up to 60s)
-          for i in $(seq 1 30); do
-            if curl -sf http://localhost:8081/status 2>/dev/null | grep -q "packager-status:running"; then
-              echo "Metro bundler is ready"
-              break
-            fi
-            echo "Waiting for Metro... ($i/30)"
-            sleep 2
-          done
 
       - name: Run Detox tests (Android)
         uses: reactivecircus/android-emulator-runner@b530d96654c385303d652368551fb075bc2f0b6b # v2.35.0
