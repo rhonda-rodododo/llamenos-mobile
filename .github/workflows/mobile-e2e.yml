@@ -152,6 +152,19 @@ jobs:
       - name: Build for Detox (iOS Debug)
         run: bunx detox build --configuration ios.sim.debug
 
+      - name: Start Metro bundler
+        run: |
+          nohup bunx react-native start --port 8081 &
+          # Wait for Metro to be ready (up to 60s)
+          for i in $(seq 1 30); do
+            if curl -sf http://localhost:8081/status 2>/dev/null | grep -q "packager-status:running"; then
+              echo "Metro bundler is ready"
+              break
+            fi
+            echo "Waiting for Metro... ($i/30)"
+            sleep 2
+          done
+
       - name: Run Detox tests (iOS)
         run: bunx detox test --configuration ios.sim.debug --cleanup --headless
         env:
@@ -240,6 +253,19 @@ jobs:
 
       - name: Build for Detox (Android Debug)
         run: bunx detox build --configuration android.emu.debug
+
+      - name: Start Metro bundler
+        run: |
+          nohup bunx react-native start --port 8081 &
+          # Wait for Metro to be ready (up to 60s)
+          for i in $(seq 1 30); do
+            if curl -sf http://localhost:8081/status 2>/dev/null | grep -q "packager-status:running"; then
+              echo "Metro bundler is ready"
+              break
+            fi
+            echo "Waiting for Metro... ($i/30)"
+            sleep 2
+          done
 
       - name: Run Detox tests (Android)
         uses: reactivecircus/android-emulator-runner@b530d96654c385303d652368551fb075bc2f0b6b # v2.35.0
