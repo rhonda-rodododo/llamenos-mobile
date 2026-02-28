@@ -13,7 +13,7 @@ describe('Error States', () => {
 
   describe('Wrong PIN entry', () => {
     beforeEach(async () => {
-      await device.launchApp({ newInstance: true })
+      await device.launchApp({ newInstance: true, delete: true })
     })
 
     it('should show error on wrong PIN entry', async () => {

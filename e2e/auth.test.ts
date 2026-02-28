@@ -100,6 +100,10 @@ describe('Auth Flow', () => {
   })
 
   describe('PIN entry', () => {
+    beforeEach(async () => {
+      await device.launchApp({ newInstance: true, delete: true })
+    })
+
     it('should show PIN input digits', async () => {
       await device.openURL({ url: 'llamenos://onboarding' })
       await waitFor(element(by.id('onboarding-screen'))).toBeVisible().withTimeout(5_000)

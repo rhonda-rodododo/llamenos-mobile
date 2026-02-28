@@ -38,18 +38,22 @@ export async function authenticateApp() {
 
 /**
  * Enter a PIN using the digit inputs.
- * Waits for the first digit to be visible, then types each digit.
+ * Waits for the first digit to be visible, then types each digit via keyboard.
+ * Uses typeText (keyboard events) instead of replaceText (direct text injection)
+ * because replaceText doesn't trigger onChangeText reliably on Android's
+ * Bridgeless architecture.
  */
 export async function enterPin(pin: string = '1111') {
   await waitFor(element(by.id('pin-digit-0')))
     .toBeVisible()
     .withTimeout(10_000)
 
+  // Type each digit into its input — typeText goes through the keyboard,
+  // which reliably triggers onChangeText and the auto-advance mechanism
   for (let i = 0; i < pin.length; i++) {
-    await element(by.id(`pin-digit-${i}`)).tap()
-    await element(by.id(`pin-digit-${i}`)).replaceText(pin[i])
+    await element(by.id(`pin-digit-${i}`)).typeText(pin[i])
   }
 
-  // Brief wait for onComplete to fire and state to settle
+  // Wait for onComplete to fire and state to settle
   await new Promise(resolve => setTimeout(resolve, 500))
 }
