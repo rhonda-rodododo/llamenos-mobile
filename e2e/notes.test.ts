@@ -17,7 +17,7 @@ describe('Notes', () => {
   })
 
   it('should navigate to notes tab', async () => {
-    await element(by.id('tab-notes')).tap()
+    await element(by.text('Notes')).tap()
     await waitFor(element(by.id('notes-screen')))
       .toBeVisible()
       .withTimeout(10_000)

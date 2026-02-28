@@ -152,9 +152,9 @@ describe('Auth Flow', () => {
       await enterPin('1111')
 
       // Should be logged in — lock the app
-      // Use longer timeout: CI simulator is slow after PIN setup + keyboard dismiss
-      await waitFor(element(by.id('tab-settings'))).toBeVisible().withTimeout(20_000)
-      await element(by.id('tab-settings')).tap()
+      await waitFor(element(by.id('dashboard-screen'))).toBeVisible().withTimeout(20_000)
+      // Navigate to settings — use text label since tab testIDs may not render
+      await element(by.text('Settings')).tap()
       await waitFor(element(by.id('settings-screen'))).toBeVisible().withTimeout(10_000)
       await element(by.id('settings-screen')).scrollTo('bottom')
       await element(by.id('settings-lock-btn')).tap()

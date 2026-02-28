@@ -21,7 +21,7 @@ describe('Custom Field Context Filtering', () => {
   describe('Conversation note form', () => {
     it('should open conversation note form', async () => {
       // Navigate to conversations
-      await element(by.id('tab-conversations')).tap()
+      await element(by.text('Messages')).tap()
       await waitFor(element(by.id('conversations-screen')))
         .toBeVisible()
         .withTimeout(10_000)
@@ -93,7 +93,7 @@ describe('Custom Field Context Filtering', () => {
 
   describe('Note form from notes tab', () => {
     it('should navigate to notes tab', async () => {
-      await element(by.id('tab-notes')).tap()
+      await element(by.text('Notes')).tap()
       await waitFor(element(by.id('notes-screen')))
         .toBeVisible()
         .withTimeout(10_000)

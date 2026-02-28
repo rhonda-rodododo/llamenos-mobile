@@ -18,7 +18,7 @@ describe('Admin Settings', () => {
     await authenticateApp()
 
     // Navigate to settings to check for admin sections
-    await element(by.id('tab-settings')).tap()
+    await element(by.text('Settings')).tap()
     await waitFor(element(by.id('settings-screen')))
       .toBeVisible()
       .withTimeout(10_000)

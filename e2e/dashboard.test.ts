@@ -51,14 +51,14 @@ describe('Dashboard', () => {
   })
 
   it('should navigate to notes tab', async () => {
-    await element(by.id('tab-notes')).tap()
+    await element(by.text('Notes')).tap()
     await waitFor(element(by.id('notes-screen')))
       .toBeVisible()
       .withTimeout(10_000)
   })
 
   it('should navigate back to dashboard tab', async () => {
-    await element(by.id('tab-dashboard')).tap()
+    await element(by.text('Dashboard')).tap()
     await waitFor(element(by.id('dashboard-screen')))
       .toBeVisible()
       .withTimeout(10_000)

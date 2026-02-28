@@ -47,9 +47,11 @@ export async function authenticateApp() {
   // Confirm PIN: 1111
   await enterPin('1111')
 
-  // Wait for authenticated state — tabs should appear
-  // Use longer timeout: CI simulator needs time for keyboard dismiss + navigation
-  await waitFor(element(by.id('tab-dashboard')))
+  // Wait for authenticated state — dashboard screen should appear
+  // Note: we wait for 'dashboard-screen' (the screen content) rather than
+  // 'tab-dashboard' (the tab button) because the tab bar testIDs may not
+  // render immediately in CI. The dashboard screen IS visible after auth.
+  await waitFor(element(by.id('dashboard-screen')))
     .toBeVisible()
     .withTimeout(20_000)
 }

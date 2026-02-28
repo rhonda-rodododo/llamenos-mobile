@@ -17,7 +17,7 @@ describe('Settings', () => {
   })
 
   it('should navigate to settings tab', async () => {
-    await element(by.id('tab-settings')).tap()
+    await element(by.text('Settings')).tap()
     await waitFor(element(by.id('settings-screen')))
       .toBeVisible()
       .withTimeout(10_000)

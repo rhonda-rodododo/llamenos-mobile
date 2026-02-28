@@ -17,7 +17,7 @@ describe('Shifts', () => {
   })
 
   it('should navigate to shifts tab', async () => {
-    await element(by.id('tab-shifts')).tap()
+    await element(by.text('Shifts')).tap()
     await waitFor(element(by.id('shifts-screen')))
       .toBeVisible()
       .withTimeout(10_000)

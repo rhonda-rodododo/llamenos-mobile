@@ -24,7 +24,7 @@ describe('Navigation', () => {
     })
 
     it('should switch to notes tab', async () => {
-      await element(by.id('tab-notes')).tap()
+      await element(by.text('Notes')).tap()
       await waitFor(element(by.id('notes-screen')))
         .toBeVisible()
         .withTimeout(10_000)
@@ -32,14 +32,14 @@ describe('Navigation', () => {
 
     it('should switch to conversations tab', async () => {
       // Conversations tab may be hidden if user lacks permission
-      const hasConvTab = await waitFor(element(by.id('tab-conversations')))
+      const hasConvTab = await waitFor(element(by.text('Messages')))
         .toBeVisible()
         .withTimeout(3_000)
         .then(() => true)
         .catch(() => false)
 
       if (hasConvTab) {
-        await element(by.id('tab-conversations')).tap()
+        await element(by.text('Messages')).tap()
         await waitFor(element(by.id('conversations-screen')))
           .toBeVisible()
           .withTimeout(10_000)
@@ -47,21 +47,21 @@ describe('Navigation', () => {
     })
 
     it('should switch to shifts tab', async () => {
-      await element(by.id('tab-shifts')).tap()
+      await element(by.text('Shifts')).tap()
       await waitFor(element(by.id('shifts-screen')))
         .toBeVisible()
         .withTimeout(10_000)
     })
 
     it('should switch to settings tab', async () => {
-      await element(by.id('tab-settings')).tap()
+      await element(by.text('Settings')).tap()
       await waitFor(element(by.id('settings-screen')))
         .toBeVisible()
         .withTimeout(10_000)
     })
 
     it('should switch back to dashboard tab', async () => {
-      await element(by.id('tab-dashboard')).tap()
+      await element(by.text('Dashboard')).tap()
       await waitFor(element(by.id('dashboard-screen')))
         .toBeVisible()
         .withTimeout(10_000)
@@ -71,15 +71,15 @@ describe('Navigation', () => {
   describe('Rapid tab switching', () => {
     it('should handle rapid switching without crashes', async () => {
       const tabs = [
-        { id: 'tab-notes', screen: 'notes-screen' },
-        { id: 'tab-shifts', screen: 'shifts-screen' },
-        { id: 'tab-dashboard', screen: 'dashboard-screen' },
-        { id: 'tab-settings', screen: 'settings-screen' },
-        { id: 'tab-dashboard', screen: 'dashboard-screen' },
+        { label: 'Notes', screen: 'notes-screen' },
+        { label: 'Shifts', screen: 'shifts-screen' },
+        { label: 'Dashboard', screen: 'dashboard-screen' },
+        { label: 'Settings', screen: 'settings-screen' },
+        { label: 'Dashboard', screen: 'dashboard-screen' },
       ]
 
       for (const tab of tabs) {
-        await element(by.id(tab.id)).tap()
+        await element(by.text(tab.label)).tap()
         // Brief wait — we're testing rapid switching, not load times
         await new Promise(resolve => setTimeout(resolve, 500))
       }
@@ -93,7 +93,7 @@ describe('Navigation', () => {
 
   describe('Admin section navigation', () => {
     it('should navigate to admin sections if admin', async () => {
-      await element(by.id('tab-settings')).tap()
+      await element(by.text('Settings')).tap()
       await waitFor(element(by.id('settings-screen')))
         .toBeVisible()
         .withTimeout(10_000)
@@ -126,7 +126,7 @@ describe('Navigation', () => {
   describe('Tab state persistence', () => {
     it('should retain scroll position when switching tabs', async () => {
       // Go to notes tab and scroll down
-      await element(by.id('tab-notes')).tap()
+      await element(by.text('Notes')).tap()
       await waitFor(element(by.id('notes-screen')))
         .toBeVisible()
         .withTimeout(10_000)
@@ -134,12 +134,12 @@ describe('Navigation', () => {
       await element(by.id('notes-screen')).swipe('up', 'slow', 0.3)
 
       // Switch to dashboard and back
-      await element(by.id('tab-dashboard')).tap()
+      await element(by.text('Dashboard')).tap()
       await waitFor(element(by.id('dashboard-screen')))
         .toBeVisible()
         .withTimeout(10_000)
 
-      await element(by.id('tab-notes')).tap()
+      await element(by.text('Notes')).tap()
       await waitFor(element(by.id('notes-screen')))
         .toBeVisible()
         .withTimeout(10_000)

@@ -21,7 +21,7 @@ describe('Admin Features', () => {
 
   describe('Settings screen', () => {
     it('should navigate to settings', async () => {
-      await element(by.id('tab-settings')).tap()
+      await element(by.text('Settings')).tap()
       await waitFor(element(by.id('settings-screen')))
         .toBeVisible()
         .withTimeout(10_000)
@@ -82,7 +82,7 @@ describe('Admin Features', () => {
 
   describe('Admin-specific screens (conditional)', () => {
     it('should show admin sections in settings if user is admin', async () => {
-      await element(by.id('tab-settings')).tap()
+      await element(by.text('Settings')).tap()
       await waitFor(element(by.id('settings-screen')))
         .toBeVisible()
         .withTimeout(5_000)
@@ -103,15 +103,10 @@ describe('Admin Features', () => {
 
     it('should navigate between all tabs without errors', async () => {
       // Cycle through all tabs to verify none crash
-      const tabs = [
-        'tab-dashboard',
-        'tab-notes',
-        'tab-shifts',
-        'tab-settings',
-      ]
+      const tabs = ['Dashboard', 'Notes', 'Shifts', 'Settings']
 
       for (const tab of tabs) {
-        await element(by.id(tab)).tap()
+        await element(by.text(tab)).tap()
         // Wait briefly for each screen to load
         await new Promise(resolve => setTimeout(resolve, 1_000))
       }

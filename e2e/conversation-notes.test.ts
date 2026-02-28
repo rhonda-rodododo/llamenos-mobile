@@ -17,7 +17,7 @@ describe('Conversation Notes', () => {
   })
 
   it('should navigate to conversations tab', async () => {
-    await element(by.id('tab-conversations')).tap()
+    await element(by.text('Messages')).tap()
     await waitFor(element(by.id('conversations-screen')))
       .toBeVisible()
       .withTimeout(10_000)
