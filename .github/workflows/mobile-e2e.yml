@@ -259,7 +259,12 @@ jobs:
           force-avd-creation: false
           emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -no-snapshot
           disable-animations: true
-          script: bunx detox test --configuration android.emu.release --cleanup --headless
+          script: |
+            # Dismiss any system dialogs (e.g. "Pixel Launcher isn't responding")
+            adb shell input keyevent KEYCODE_BACK || true
+            adb shell input keyevent KEYCODE_BACK || true
+            sleep 3
+            bunx detox test --configuration android.emu.release --cleanup --headless
         env:
           DETOX_LOGLEVEL: verbose
 

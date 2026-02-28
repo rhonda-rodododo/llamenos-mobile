@@ -4,11 +4,11 @@
  */
 
 import { by, device, element, expect } from 'detox'
-import { enterPin } from './helpers'
+import { enterPin, launchApp } from './helpers'
 
 describe('Auth Flow', () => {
   beforeAll(async () => {
-    await device.launchApp({ newInstance: true })
+    await launchApp({ newInstance: true })
   })
 
   afterAll(async () => {
@@ -17,7 +17,7 @@ describe('Auth Flow', () => {
 
   describe('Fresh install (no stored key)', () => {
     beforeEach(async () => {
-      await device.launchApp({ newInstance: true, delete: true })
+      await launchApp({ newInstance: true, delete: true })
     })
 
     it('should show the login screen', async () => {
@@ -47,7 +47,7 @@ describe('Auth Flow', () => {
 
   describe('Onboarding — keypair generation', () => {
     beforeEach(async () => {
-      await device.launchApp({ newInstance: true, delete: true })
+      await launchApp({ newInstance: true, delete: true })
     })
 
     it('should navigate to onboarding from login', async () => {
@@ -101,7 +101,7 @@ describe('Auth Flow', () => {
 
   describe('PIN entry', () => {
     beforeEach(async () => {
-      await device.launchApp({ newInstance: true, delete: true })
+      await launchApp({ newInstance: true, delete: true })
     })
 
     it('should show PIN input digits', async () => {
@@ -139,7 +139,7 @@ describe('Auth Flow', () => {
   describe('PIN unlock — wrong PIN and retry', () => {
     it('should show error on wrong PIN then succeed on correct PIN', async () => {
       // Setup: generate key and set PIN
-      await device.launchApp({ newInstance: true, delete: true })
+      await launchApp({ newInstance: true, delete: true })
       await device.openURL({ url: 'llamenos://onboarding' })
       await waitFor(element(by.id('onboarding-screen'))).toBeVisible().withTimeout(5_000)
       await element(by.id('onboarding-generate-btn')).tap()
@@ -183,7 +183,7 @@ describe('Auth Flow', () => {
 
   describe('nsec import flow', () => {
     beforeEach(async () => {
-      await device.launchApp({ newInstance: true, delete: true })
+      await launchApp({ newInstance: true, delete: true })
     })
 
     it('should show nsec import input after hub connect', async () => {

@@ -4,7 +4,7 @@
  */
 
 import { by, device, element, expect } from 'detox'
-import { enterPin } from './helpers'
+import { enterPin, launchApp } from './helpers'
 
 describe('Error States', () => {
   afterAll(async () => {
@@ -13,7 +13,7 @@ describe('Error States', () => {
 
   describe('Wrong PIN entry', () => {
     beforeEach(async () => {
-      await device.launchApp({ newInstance: true, delete: true })
+      await launchApp({ newInstance: true, delete: true })
     })
 
     it('should show error on wrong PIN entry', async () => {
@@ -66,7 +66,7 @@ describe('Error States', () => {
     it('should show decreasing attempt count', async () => {
       // This test depends on the state from the previous describe block
       // Launch fresh to isolate
-      await device.launchApp({ newInstance: true })
+      await launchApp({ newInstance: true })
 
       // Try to reach PIN entry screen
       await waitFor(element(by.id('login-screen')))
@@ -97,7 +97,7 @@ describe('Error States', () => {
 
   describe('Offline banner', () => {
     it('should not show offline banner when online', async () => {
-      await device.launchApp({ newInstance: true })
+      await launchApp({ newInstance: true })
 
       // Wait for app to load
       await new Promise(resolve => setTimeout(resolve, 3_000))

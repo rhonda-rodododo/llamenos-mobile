@@ -6,11 +6,11 @@
  */
 
 import { by, device, element, expect } from 'detox'
-import { authenticateApp } from './helpers'
+import { authenticateApp, launchApp } from './helpers'
 
 describe('Custom Field Context Filtering', () => {
   beforeAll(async () => {
-    await device.launchApp({ newInstance: true, delete: true })
+    await launchApp({ newInstance: true, delete: true })
     await authenticateApp()
   })
 

@@ -1,14 +1,31 @@
 /**
- * Shared E2E test helpers — authentication, PIN entry.
+ * Shared E2E test helpers — app launch, authentication, PIN entry.
  * Used by tests that require authenticated app state.
  */
 
 import { by, device, element } from 'detox'
 
 /**
+ * Launch the app with sensible defaults for E2E tests.
+ * Pre-grants notification permissions on iOS to prevent system dialogs
+ * from blocking test interactions.
+ */
+export async function launchApp(
+  options: Parameters<typeof device.launchApp>[0] = {},
+) {
+  await device.launchApp({
+    ...options,
+    permissions: {
+      notifications: 'YES',
+      ...options.permissions,
+    },
+  })
+}
+
+/**
  * Run through the onboarding flow to authenticate the app.
  * Generates a keypair, sets PIN 1111, confirms PIN.
- * Call this in beforeAll after device.launchApp({ newInstance: true, delete: true }).
+ * Call this in beforeAll after launchApp({ newInstance: true, delete: true }).
  */
 export async function authenticateApp() {
   // Navigate to onboarding via deep link

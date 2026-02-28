@@ -4,11 +4,11 @@
  */
 
 import { by, device, element, expect } from 'detox'
-import { authenticateApp } from './helpers'
+import { authenticateApp, launchApp } from './helpers'
 
 describe('Settings', () => {
   beforeAll(async () => {
-    await device.launchApp({ newInstance: true, delete: true })
+    await launchApp({ newInstance: true, delete: true })
     await authenticateApp()
   })
 
