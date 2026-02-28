@@ -213,16 +213,15 @@ jobs:
           path: |
             ~/.android/avd/*
             ~/.android/adb*
-          key: avd-34-${{ runner.os }}
+          key: avd-34-default-${{ runner.os }}
 
       - name: Create AVD
         if: steps.avd-cache.outputs.cache-hit != 'true'
         uses: reactivecircus/android-emulator-runner@b530d96654c385303d652368551fb075bc2f0b6b # v2.35.0
         with:
           api-level: 34
-          target: google_apis
+          target: default
           arch: x86_64
-          profile: pixel_7
           force-avd-creation: true
           emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -no-snapshot
           disable-animations: true
@@ -253,18 +252,12 @@ jobs:
         uses: reactivecircus/android-emulator-runner@b530d96654c385303d652368551fb075bc2f0b6b # v2.35.0
         with:
           api-level: 34
-          target: google_apis
+          target: default
           arch: x86_64
-          profile: pixel_7
           force-avd-creation: false
           emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -no-snapshot
           disable-animations: true
-          script: |
-            # Dismiss any system dialogs (e.g. "Pixel Launcher isn't responding")
-            adb shell input keyevent KEYCODE_BACK || true
-            adb shell input keyevent KEYCODE_BACK || true
-            sleep 3
-            bunx detox test --configuration android.emu.release --cleanup --headless
+          script: bunx detox test --configuration android.emu.release --cleanup --headless
         env:
           DETOX_LOGLEVEL: verbose
 
