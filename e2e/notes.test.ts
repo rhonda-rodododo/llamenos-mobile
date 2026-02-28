@@ -1,15 +1,15 @@
 /**
  * Notes E2E tests — list, create, view encrypted notes.
  * Epic 88: Desktop & Mobile E2E Tests.
- *
- * Assumes authenticated state with hub config.
  */
 
 import { by, device, element, expect } from 'detox'
+import { authenticateApp } from './helpers'
 
 describe('Notes', () => {
   beforeAll(async () => {
-    await device.launchApp({ newInstance: true })
+    await device.launchApp({ newInstance: true, delete: true })
+    await authenticateApp()
   })
 
   afterAll(async () => {

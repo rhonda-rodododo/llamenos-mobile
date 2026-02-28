@@ -4,6 +4,7 @@
  */
 
 import { by, device, element, expect } from 'detox'
+import { enterPin } from './helpers'
 
 describe('Auth Flow', () => {
   beforeAll(async () => {
@@ -66,8 +67,6 @@ describe('Auth Flow', () => {
     })
 
     it('should show keypair after generation', async () => {
-      // Navigate to onboarding directly
-      // In Expo Router, deep linking may work
       await device.openURL({ url: 'llamenos://onboarding' })
 
       await waitFor(element(by.id('onboarding-screen')))
@@ -95,8 +94,8 @@ describe('Auth Flow', () => {
       await waitFor(element(by.id('onboarding-confirm-backup-btn'))).toBeVisible().withTimeout(5_000)
       await element(by.id('onboarding-confirm-backup-btn')).tap()
 
-      // Should show PIN input
-      await waitFor(element(by.id('pin-input'))).toBeVisible().withTimeout(5_000)
+      // Should show PIN digit inputs
+      await waitFor(element(by.id('pin-digit-0'))).toBeVisible().withTimeout(10_000)
     })
   })
 
@@ -107,7 +106,7 @@ describe('Auth Flow', () => {
       await element(by.id('onboarding-generate-btn')).tap()
       await waitFor(element(by.id('onboarding-confirm-backup-btn'))).toBeVisible().withTimeout(5_000)
       await element(by.id('onboarding-confirm-backup-btn')).tap()
-      await waitFor(element(by.id('pin-input'))).toBeVisible().withTimeout(5_000)
+      await waitFor(element(by.id('pin-digit-0'))).toBeVisible().withTimeout(10_000)
 
       // All 4 digit inputs should be visible
       for (let i = 0; i < 4; i++) {
@@ -121,18 +120,12 @@ describe('Auth Flow', () => {
       await element(by.id('onboarding-generate-btn')).tap()
       await waitFor(element(by.id('onboarding-confirm-backup-btn'))).toBeVisible().withTimeout(5_000)
       await element(by.id('onboarding-confirm-backup-btn')).tap()
-      await waitFor(element(by.id('pin-input'))).toBeVisible().withTimeout(5_000)
 
       // Enter PIN: 1234
-      for (let i = 0; i < 4; i++) {
-        await element(by.id(`pin-digit-${i}`)).typeText(String(i + 1))
-      }
+      await enterPin('1234')
 
       // Should advance to confirm step — enter wrong PIN: 5678
-      await waitFor(element(by.id('pin-input'))).toBeVisible().withTimeout(5_000)
-      for (let i = 0; i < 4; i++) {
-        await element(by.id(`pin-digit-${i}`)).typeText(String(i + 5))
-      }
+      await enterPin('5678')
 
       // Should show error
       await waitFor(element(by.id('pin-error'))).toBeVisible().withTimeout(5_000)
@@ -148,17 +141,11 @@ describe('Auth Flow', () => {
       await element(by.id('onboarding-generate-btn')).tap()
       await waitFor(element(by.id('onboarding-confirm-backup-btn'))).toBeVisible().withTimeout(5_000)
       await element(by.id('onboarding-confirm-backup-btn')).tap()
-      await waitFor(element(by.id('pin-input'))).toBeVisible().withTimeout(5_000)
 
       // Set PIN: 1111
-      for (let i = 0; i < 4; i++) {
-        await element(by.id(`pin-digit-${i}`)).typeText('1')
-      }
+      await enterPin('1111')
       // Confirm PIN: 1111
-      await waitFor(element(by.id('pin-input'))).toBeVisible().withTimeout(5_000)
-      for (let i = 0; i < 4; i++) {
-        await element(by.id(`pin-digit-${i}`)).typeText('1')
-      }
+      await enterPin('1111')
 
       // Should be logged in — lock the app
       await waitFor(element(by.id('tab-settings'))).toBeVisible().withTimeout(10_000)
@@ -169,22 +156,16 @@ describe('Auth Flow', () => {
 
       // Should be back at login with PIN input
       await waitFor(element(by.id('login-screen'))).toBeVisible().withTimeout(10_000)
-      await waitFor(element(by.id('pin-input'))).toBeVisible().withTimeout(5_000)
+      await waitFor(element(by.id('pin-digit-0'))).toBeVisible().withTimeout(10_000)
 
       // Enter wrong PIN: 9999
-      for (let i = 0; i < 4; i++) {
-        await element(by.id(`pin-digit-${i}`)).typeText('9')
-      }
+      await enterPin('9999')
 
       // Should show error
       await waitFor(element(by.id('pin-error'))).toBeVisible().withTimeout(5_000)
 
       // Now enter correct PIN: 1111
-      // The PIN input should still be visible after error
-      await waitFor(element(by.id('pin-input'))).toBeVisible().withTimeout(5_000)
-      for (let i = 0; i < 4; i++) {
-        await element(by.id(`pin-digit-${i}`)).typeText('1')
-      }
+      await enterPin('1111')
 
       // Should unlock successfully — dashboard should appear
       await waitFor(element(by.id('dashboard-screen')))
@@ -202,7 +183,6 @@ describe('Auth Flow', () => {
     })
 
     it('should show nsec import input after hub connect', async () => {
-      // Enter hub URL first
       await waitFor(element(by.id('login-screen'))).toBeVisible().withTimeout(10_000)
 
       const hasHubInput = await waitFor(element(by.id('login-hub-url-input')))
@@ -211,12 +191,11 @@ describe('Auth Flow', () => {
         .then(() => true)
         .catch(() => false)
 
-      if (!hasHubInput) return // Hub already configured
+      if (!hasHubInput) return
 
       await element(by.id('login-hub-url-input')).typeText('https://demo.llamenos.org')
       await element(by.id('login-connect-btn')).tap()
 
-      // After connect, nsec input should appear
       await waitFor(element(by.id('login-nsec-input')))
         .toBeVisible()
         .withTimeout(10_000)
@@ -228,7 +207,6 @@ describe('Auth Flow', () => {
     it('should show import button alongside nsec input', async () => {
       await waitFor(element(by.id('login-screen'))).toBeVisible().withTimeout(10_000)
 
-      // If hub is not configured, configure it first
       const hasHubInput = await waitFor(element(by.id('login-hub-url-input')))
         .toBeVisible()
         .withTimeout(3_000)
@@ -241,7 +219,6 @@ describe('Auth Flow', () => {
         await new Promise(resolve => setTimeout(resolve, 3_000))
       }
 
-      // Check for import flow elements
       const hasNsecInput = await waitFor(element(by.id('login-nsec-input')))
         .toBeVisible()
         .withTimeout(5_000)
@@ -256,7 +233,6 @@ describe('Auth Flow', () => {
     it('should show generate link alongside import flow', async () => {
       await waitFor(element(by.id('login-screen'))).toBeVisible().withTimeout(10_000)
 
-      // If hub is not configured, configure it first
       const hasHubInput = await waitFor(element(by.id('login-hub-url-input')))
         .toBeVisible()
         .withTimeout(3_000)
@@ -269,7 +245,6 @@ describe('Auth Flow', () => {
         await new Promise(resolve => setTimeout(resolve, 3_000))
       }
 
-      // Check for generate new keypair link
       const hasGenerateBtn = await waitFor(element(by.id('login-generate-btn')))
         .toBeVisible()
         .withTimeout(5_000)

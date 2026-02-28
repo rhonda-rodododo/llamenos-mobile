@@ -4,6 +4,7 @@
  */
 
 import { by, device, element, expect } from 'detox'
+import { enterPin } from './helpers'
 
 describe('Error States', () => {
   afterAll(async () => {
@@ -16,21 +17,12 @@ describe('Error States', () => {
     })
 
     it('should show error on wrong PIN entry', async () => {
-      // Navigate to login — need a stored key for PIN entry to show
-      // Deep link to onboarding to set up a key first
+      // Navigate to onboarding to set up a key first
       await device.openURL({ url: 'llamenos://onboarding' })
-
-      await waitFor(element(by.id('onboarding-screen')))
-        .toBeVisible()
-        .withTimeout(5_000)
-        .catch(() => {
-          // May not be able to deep link in test env
-          return
-        })
 
       const isOnboarding = await waitFor(element(by.id('onboarding-screen')))
         .toBeVisible()
-        .withTimeout(3_000)
+        .withTimeout(5_000)
         .then(() => true)
         .catch(() => false)
 
@@ -44,16 +36,10 @@ describe('Error States', () => {
       await element(by.id('onboarding-confirm-backup-btn')).tap()
 
       // Set PIN: 1234
-      await waitFor(element(by.id('pin-input'))).toBeVisible().withTimeout(5_000)
-      for (let i = 0; i < 4; i++) {
-        await element(by.id(`pin-digit-${i}`)).typeText(String(i + 1))
-      }
+      await enterPin('1234')
 
       // Confirm PIN: 1234
-      await waitFor(element(by.id('pin-input'))).toBeVisible().withTimeout(5_000)
-      for (let i = 0; i < 4; i++) {
-        await element(by.id(`pin-digit-${i}`)).typeText(String(i + 1))
-      }
+      await enterPin('1234')
 
       // Should be logged in — now lock and try wrong PIN
       await waitFor(element(by.id('tab-settings'))).toBeVisible().withTimeout(10_000)
@@ -64,12 +50,10 @@ describe('Error States', () => {
 
       // Should be on login screen with PIN input
       await waitFor(element(by.id('login-screen'))).toBeVisible().withTimeout(10_000)
-      await waitFor(element(by.id('pin-input'))).toBeVisible().withTimeout(5_000)
+      await waitFor(element(by.id('pin-digit-0'))).toBeVisible().withTimeout(10_000)
 
       // Enter wrong PIN: 9999
-      for (let i = 0; i < 4; i++) {
-        await element(by.id(`pin-digit-${i}`)).typeText('9')
-      }
+      await enterPin('9999')
 
       // Should show error message
       await waitFor(element(by.id('pin-error')))
@@ -89,7 +73,7 @@ describe('Error States', () => {
         .toBeVisible()
         .withTimeout(10_000)
 
-      const hasPinInput = await waitFor(element(by.id('pin-input')))
+      const hasPinInput = await waitFor(element(by.id('pin-digit-0')))
         .toBeVisible()
         .withTimeout(5_000)
         .then(() => true)
@@ -99,9 +83,7 @@ describe('Error States', () => {
 
       // Enter wrong PIN twice
       for (let attempt = 0; attempt < 2; attempt++) {
-        for (let i = 0; i < 4; i++) {
-          await element(by.id(`pin-digit-${i}`)).typeText('0')
-        }
+        await enterPin('0000')
         // Wait for error to appear before retrying
         await waitFor(element(by.id('pin-error')))
           .toBeVisible()

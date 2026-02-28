@@ -1,15 +1,15 @@
 /**
  * Tab and navigation E2E tests — switching tabs, back navigation, state persistence.
  * Epic 104: Mobile E2E Test Expansion.
- *
- * Assumes authenticated state with hub config.
  */
 
 import { by, device, element, expect } from 'detox'
+import { authenticateApp } from './helpers'
 
 describe('Navigation', () => {
   beforeAll(async () => {
-    await device.launchApp({ newInstance: true })
+    await device.launchApp({ newInstance: true, delete: true })
+    await authenticateApp()
   })
 
   afterAll(async () => {

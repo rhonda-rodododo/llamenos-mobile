@@ -1,15 +1,15 @@
 /**
  * User settings E2E tests — theme, language, lock/unlock.
  * Epic 104: Mobile E2E Test Expansion.
- *
- * Assumes authenticated state with hub config.
  */
 
 import { by, device, element, expect } from 'detox'
+import { authenticateApp } from './helpers'
 
 describe('Settings', () => {
   beforeAll(async () => {
-    await device.launchApp({ newInstance: true })
+    await device.launchApp({ newInstance: true, delete: true })
+    await authenticateApp()
   })
 
   afterAll(async () => {
@@ -112,7 +112,7 @@ describe('Settings', () => {
 
     it('should show PIN input for returning user', async () => {
       // After locking, user should see PIN entry (not import)
-      await waitFor(element(by.id('pin-input')))
+      await waitFor(element(by.id('pin-digit-0')))
         .toBeVisible()
         .withTimeout(5_000)
         .catch(() => {

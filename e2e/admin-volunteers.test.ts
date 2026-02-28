@@ -8,12 +8,14 @@
  */
 
 import { by, device, element, expect } from 'detox'
+import { authenticateApp } from './helpers'
 
 describe('Admin Volunteers', () => {
   let hasAdminAccess = false
 
   beforeAll(async () => {
-    await device.launchApp({ newInstance: true })
+    await device.launchApp({ newInstance: true, delete: true })
+    await authenticateApp()
 
     // Navigate to settings to check for admin sections
     await element(by.id('tab-settings')).tap()

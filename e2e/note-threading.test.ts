@@ -1,15 +1,15 @@
 /**
  * Note Threading E2E tests — reply to notes, expand/collapse threads.
  * Epic 128: Mobile Records i18n & Detox Tests.
- *
- * Assumes authenticated state with hub config and existing notes.
  */
 
 import { by, device, element, expect } from 'detox'
+import { authenticateApp } from './helpers'
 
 describe('Note Threading', () => {
   beforeAll(async () => {
-    await device.launchApp({ newInstance: true })
+    await device.launchApp({ newInstance: true, delete: true })
+    await authenticateApp()
   })
 
   afterAll(async () => {

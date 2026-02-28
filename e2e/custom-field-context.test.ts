@@ -3,14 +3,15 @@
  * Epic 128: Mobile Records i18n & Detox Tests.
  *
  * Tests that note forms show context-appropriate custom fields.
- * Assumes authenticated state with hub config and custom fields configured.
  */
 
 import { by, device, element, expect } from 'detox'
+import { authenticateApp } from './helpers'
 
 describe('Custom Field Context Filtering', () => {
   beforeAll(async () => {
-    await device.launchApp({ newInstance: true })
+    await device.launchApp({ newInstance: true, delete: true })
+    await authenticateApp()
   })
 
   afterAll(async () => {

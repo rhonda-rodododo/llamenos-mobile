@@ -1,17 +1,15 @@
 /**
  * Dashboard E2E tests — rendering, shift status, stats.
  * Epic 88: Desktop & Mobile E2E Tests.
- *
- * These tests assume the app is authenticated. In a real CI setup,
- * test fixtures would pre-seed auth state (key store + hub config).
  */
 
 import { by, device, element, expect } from 'detox'
+import { authenticateApp } from './helpers'
 
 describe('Dashboard', () => {
   beforeAll(async () => {
-    await device.launchApp({ newInstance: true })
-    // Navigate to dashboard tab (should be default after auth)
+    await device.launchApp({ newInstance: true, delete: true })
+    await authenticateApp()
   })
 
   afterAll(async () => {

@@ -1,15 +1,15 @@
 /**
  * Admin Contacts E2E tests — navigate, view list, view timeline.
  * Epic 128: Mobile Records i18n & Detox Tests.
- *
- * Assumes authenticated state with admin permissions and hub config.
  */
 
 import { by, device, element, expect } from 'detox'
+import { authenticateApp } from './helpers'
 
 describe('Admin Contacts', () => {
   beforeAll(async () => {
-    await device.launchApp({ newInstance: true })
+    await device.launchApp({ newInstance: true, delete: true })
+    await authenticateApp()
   })
 
   afterAll(async () => {

@@ -1,15 +1,15 @@
 /**
  * Conversations tab E2E tests — list, refresh, open thread.
  * Epic 104: Mobile E2E Test Expansion.
- *
- * Assumes authenticated state with hub config.
  */
 
 import { by, device, element, expect } from 'detox'
+import { authenticateApp } from './helpers'
 
 describe('Conversations', () => {
   beforeAll(async () => {
-    await device.launchApp({ newInstance: true })
+    await device.launchApp({ newInstance: true, delete: true })
+    await authenticateApp()
   })
 
   afterAll(async () => {

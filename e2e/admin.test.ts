@@ -2,16 +2,17 @@
  * Admin feature E2E tests — volunteer management, settings.
  * Epic 88: Desktop & Mobile E2E Tests.
  *
- * Assumes authenticated state with admin role.
  * Tests are conditional — if user doesn't have admin access,
  * admin-specific tests are skipped gracefully.
  */
 
 import { by, device, element, expect } from 'detox'
+import { authenticateApp } from './helpers'
 
 describe('Admin Features', () => {
   beforeAll(async () => {
-    await device.launchApp({ newInstance: true })
+    await device.launchApp({ newInstance: true, delete: true })
+    await authenticateApp()
   })
 
   afterAll(async () => {

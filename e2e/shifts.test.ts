@@ -1,15 +1,15 @@
 /**
  * Shifts E2E tests — view schedule, sign up for shifts.
  * Epic 88: Desktop & Mobile E2E Tests.
- *
- * Assumes authenticated state with hub config.
  */
 
 import { by, device, element, expect } from 'detox'
+import { authenticateApp } from './helpers'
 
 describe('Shifts', () => {
   beforeAll(async () => {
-    await device.launchApp({ newInstance: true })
+    await device.launchApp({ newInstance: true, delete: true })
+    await authenticateApp()
   })
 
   afterAll(async () => {
